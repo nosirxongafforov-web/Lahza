@@ -592,6 +592,7 @@ function showLoadError(msg) {
 }
 
 function startApp() {
+  document.body.classList.add('app-ready');
   document.getElementById('loadingScreen').style.display = 'none';
   document.getElementById('mainNav').style.display = '';
   setSyncDot('ok');
@@ -1214,6 +1215,7 @@ function showLoginScreen() {
 }
 
 function hideLoginScreen() {
+  document.body.classList.add('app-ready');
   document.getElementById('loginScreen').classList.remove('show');
 }
 
