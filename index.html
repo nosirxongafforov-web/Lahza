@@ -645,11 +645,12 @@ async function dbGetSafe(key) {
 function setSyncDot(s) { const d = document.getElementById('syncDot'); if(d) d.className = 'sync-dot ' + s; }
 
 // ─── DATE ────────────────────────────────────────────────────────
-function todayStr() { return new Date().toISOString().slice(0,10); }
+function localDateStr(d) { return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function todayStr() { return localDateStr(new Date()); }
 function shiftDate(d) {
-  const dt = new Date(activeDate + 'T00:00:00');
+  const dt = new Date(activeDate + 'T12:00:00');
   dt.setDate(dt.getDate() + d);
-  const nd = dt.toISOString().slice(0,10);
+  const nd = localDateStr(dt);
   if (nd > todayStr()) return;
   activeDate = nd;
   refreshPage();
@@ -843,7 +844,7 @@ async function renderBugun() {
   document.getElementById('bOv').textContent = ov+'%';
   document.getElementById('bHab').textContent = doneCnt+'/'+habits.length;
   document.getElementById('bNam').textContent = pDone+'/5';
-  document.getElementById('todaySub').textContent = fmtF(todayStr());
+  document.getElementById('todaySub').textContent = fmtF(activeDate);
 }
 
 function getCurBlock(sched) {
