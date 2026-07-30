@@ -28,6 +28,27 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .load-spinner{width:32px;height:32px;border:2px solid var(--border2);border-top-color:var(--gold);border-radius:50%;animation:spin 0.8s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 #loadError{display:none;background:var(--red-bg);border:1px solid var(--red);border-radius:var(--radius-sm);padding:14px 20px;font-size:13px;color:var(--red);max-width:400px;text-align:center;line-height:1.6;}
+/* LOGIN SCREEN */
+#loginScreen{position:fixed;inset:0;background:var(--bg);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px;}
+#loginScreen.show{display:flex;}
+.login-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius);padding:40px 32px;width:100%;max-width:380px;text-align:center;}
+.login-logo{font-size:40px;margin-bottom:8px;}
+.login-title{font-size:26px;font-weight:700;color:var(--gold2);margin-bottom:6px;letter-spacing:0.04em;}
+.login-sub{font-size:13px;color:var(--text3);margin-bottom:32px;line-height:1.6;}
+.login-btn{display:flex;align-items:center;justify-content:center;gap:12px;width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:14px 20px;cursor:pointer;transition:all 0.2s;color:var(--text);font-size:14px;font-weight:500;}
+.login-btn:hover{border-color:var(--gold);background:var(--gold-bg);color:var(--gold2);}
+.login-btn svg{width:20px;height:20px;flex-shrink:0;}
+.login-err{margin-top:16px;font-size:12px;color:var(--red);display:none;}
+.user-info{display:flex;align-items:center;gap:8px;cursor:pointer;padding:8px 12px;border-radius:var(--radius-sm);transition:background 0.15s;}
+.user-info:hover{background:var(--bg3);}
+.user-avatar{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1px solid var(--border2);}
+.user-avatar-placeholder{width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0f0f0f;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.user-menu{position:absolute;top:52px;right:16px;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:8px;min-width:180px;z-index:200;display:none;}
+.user-menu.open{display:block;}
+.user-menu-name{font-size:12px;color:var(--text2);padding:6px 10px;border-bottom:1px solid var(--border);margin-bottom:6px;}
+.user-menu-btn{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;color:var(--red);font-size:13px;padding:8px 10px;cursor:pointer;border-radius:var(--radius-xs);text-align:left;}
+.user-menu-btn:hover{background:var(--red-bg);}
+
 
 /* NAV */
 nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;}
@@ -183,6 +204,25 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
 </head>
 <body>
 
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">☽</div>
+    <div class="login-title">Lahza</div>
+    <div class="login-sub">Shaxsiy hayot tizimingiz.<br>Davom etish uchun kiring.</div>
+    <button class="login-btn" onclick="signInWithGoogle()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+      </svg>
+      Google bilan kirish
+    </button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
 <!-- LOADING -->
 <div id="loadingScreen">
   <div class="load-spinner"></div>
@@ -203,6 +243,8 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
     <button class="nav-btn" onclick="showPage('muhasaba',event)">Muhasaba</button>
     <button class="nav-btn" onclick="showPage('sozlamalar',event)">⚙</button>
     <div class="nav-right">
+      <div class="user-info" onclick="toggleUserMenu()" id="userInfoBtn"></div>
+      <div class="user-menu" id="userMenu"><div class="user-menu-name" id="userMenuName"></div><button class="user-menu-btn" onclick="signOut()">🚪 Chiqish</button></div>
       <div class="sync-dot ok" id="syncDot"></div>
       <div class="nav-date" id="navDate"></div>
     </div>
@@ -426,6 +468,8 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
 // ============================================================
 const SB_URL = 'https://phgnuciprunhxgmxxbsx.supabase.co';
 const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBoZ251Y2lwcnVuaHhnbXh4YnN4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODUzNDI5OTQsImV4cCI6MjEwMDkxODk5NH0.6kNyCUb-iRnrg07BJpCbKWMXL3QQtq8LSWYmy8-uWuU';
+// Faqat shu email kirishi mumkin
+const ALLOWED_EMAIL = 'nosirxongafforov@gmail.com';
 
 // ============================================================
 // SUPABASE INIT
@@ -1077,9 +1121,123 @@ async function saveSchedule(){ await dbSet('schedule',schedData); toast('✅ Jad
 async function saveHabits(){ await dbSet('habits_config',habitsData); toast('✅ Odatlar saqlandi'); }
 
 // ============================================================
+// AUTH
+// ============================================================
+async function signInWithGoogle() {
+  const errEl = document.getElementById('loginErr');
+  errEl.style.display = 'none';
+  try {
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: window.location.href
+      }
+    });
+    if(error) throw error;
+  } catch(e) {
+    errEl.textContent = 'Xato: ' + e.message;
+    errEl.style.display = 'block';
+  }
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  document.getElementById('userMenu').classList.remove('open');
+  showLoginScreen();
+}
+
+function showLoginScreen() {
+  document.getElementById('loginScreen').classList.add('show');
+  document.getElementById('mainNav').style.display = 'none';
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+}
+
+function hideLoginScreen() {
+  document.getElementById('loginScreen').classList.remove('show');
+}
+
+function toggleUserMenu() {
+  document.getElementById('userMenu').classList.toggle('open');
+}
+
+// Close menu on outside click
+document.addEventListener('click', function(e) {
+  const menu = document.getElementById('userMenu');
+  const btn = document.getElementById('userInfoBtn');
+  if(menu && !menu.contains(e.target) && btn && !btn.contains(e.target)) {
+    menu.classList.remove('open');
+  }
+});
+
+function renderUserInfo(user) {
+  const btn = document.getElementById('userInfoBtn');
+  const nameEl = document.getElementById('userMenuName');
+  if(!btn) return;
+  const name = user.user_metadata?.full_name || user.email || '';
+  const avatar = user.user_metadata?.avatar_url || '';
+  nameEl.textContent = name;
+  if(avatar) {
+    btn.innerHTML = `<img src="${avatar}" class="user-avatar" alt="${name}">`;
+  } else {
+    const initial = name.charAt(0).toUpperCase();
+    btn.innerHTML = `<div class="user-avatar-placeholder">${initial}</div>`;
+  }
+}
+
+// ============================================================
 // BOOT
 // ============================================================
-initApp();
+async function boot() {
+  setLoadMsg('Supabase ga ulanilmoqda...');
+  try {
+    if(!window.supabase || !window.supabase.createClient) throw new Error('Supabase yuklanmadi');
+    sb = window.supabase.createClient(SB_URL, SB_KEY);
+
+    setLoadMsg('Autentifikatsiya tekshirilmoqda...');
+
+    // Listen to auth state changes
+    sb.auth.onAuthStateChange(async (event, session) => {
+      if(event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        const user = session?.user;
+        if(!user) { showLoginScreen(); return; }
+
+        // Check if allowed email
+        if(user.email !== ALLOWED_EMAIL) {
+          await sb.auth.signOut();
+          const errEl = document.getElementById('loginErr');
+          errEl.textContent = '⛔ Bu akkaunt uchun ruxsat yo\'q.';
+          errEl.style.display = 'block';
+          showLoginScreen();
+          return;
+        }
+
+        hideLoginScreen();
+        document.getElementById('loadingScreen').style.display = 'none';
+        document.getElementById('mainNav').style.display = '';
+        renderUserInfo(user);
+        setSyncDot('ok');
+        initNav();
+        renderBugun();
+      } else if(event === 'SIGNED_OUT') {
+        showLoginScreen();
+        document.getElementById('loadingScreen').style.display = 'none';
+      }
+    });
+
+    // Check existing session
+    const { data: { session } } = await sb.auth.getSession();
+    if(!session) {
+      document.getElementById('loadingScreen').style.display = 'none';
+      showLoginScreen();
+    }
+    // If session exists, onAuthStateChange will handle it
+
+  } catch(e) {
+    showLoadError('Xato: ' + e.message);
+  }
+}
+
+boot();
 </script>
 </body>
 </html>
