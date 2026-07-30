@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Lahza</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
@@ -19,7 +19,8 @@
   --radius:12px;--radius-sm:8px;--radius-xs:6px;
 }
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh;}
+html{overflow-x:hidden;width:100%;}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;min-height:100vh;overflow-x:hidden;width:100%;}
 
 /* LOADING */
 #loadingScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
@@ -70,7 +71,7 @@ nav{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;
 .bottom-nav{display:none;}
 
 /* PAGES */
-.page{display:none;max-width:960px;margin:0 auto;padding:24px 16px 80px;}
+.page{display:none;max-width:960px;margin:0 auto;padding:24px 16px 80px;width:100%;overflow-x:hidden;}
 .page.active{display:block;}
 .page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;gap:12px;flex-wrap:wrap;}
 .page-title{font-size:20px;font-weight:600;}
@@ -233,6 +234,20 @@ hr{border:none;border-top:1px solid var(--border);margin:16px 0;}
   input,textarea,select{padding:12px 14px;font-size:16px;}
   body.app-ready .page{padding:16px 12px 92px;}
   .card{padding:16px;}
+
+  /* prevent grid overflow from breaking viewport detection */
+  .prayer-grid{grid-template-columns:repeat(5,1fr);gap:5px;}
+  .wg{grid-template-columns:repeat(7,1fr);gap:3px;}
+  .wd{padding:6px 1px;}
+  .wdn{font-size:8px;}
+  .ws{font-size:14px;}
+  .pb{padding:9px 2px;}
+  .pb .pn{font-size:10px;}
+  .pb .pi{font-size:14px;}
+
+  /* tables scroll within their container, not the page */
+  .tw{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  table{min-width:420px;}
 }
 </style>
 </head>
