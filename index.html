@@ -826,7 +826,7 @@ async function renderBugun() {
   const tasks = dd.tasks || [{t:'',done:false},{t:'',done:false},{t:'',done:false}];
   document.getElementById('taskRows').innerHTML = [0,1,2].map(i =>
     `<div class="trow">
-      <div class="tck ${tasks[i]?.done?'done':''}" onclick="toggleTask(${i})">✓</div>
+      <div class="tck ${tasks[i]?.done?'done':''}" onclick="toggleTask(${i})">${tasks[i]?.done?'✓':''}</div>
       <input class="tinp ${tasks[i]?.done?'striked':''}" id="task${i}" value="${(tasks[i]?.t||'').replace(/"/g,'&quot;')}"
         placeholder="Vazifa ${i+1}..." ${!isT?'disabled':''} onchange="updateTaskText(${i},this.value)">
     </div>`).join('');
@@ -908,7 +908,7 @@ async function renderNamoz() {
       <div class="pi">${s==='vaqtida'?'✓':s==='qazo'?'◑':'○'}</div>
       ${t?`<div class="ptime">${t.slice(0,5)}</div>`:''}
       <button class="pnotif ${pref[name]?'on':''}" onclick="event.stopPropagation();toggleNotif('${name}')" title="Bildirishnoma">
-        ${pref[name]?'🔔':'🔕'}
+        🔔
       </button>
     </div>`;
   }).join('');
