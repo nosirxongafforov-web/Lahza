@@ -21,11 +21,11 @@
   --blue:#5b9bd5;--blue-bg:rgba(91,155,213,0.10);
   --purple:#9b7fd4;--purple-bg:rgba(155,127,212,0.10);
   --orange:#e07c3c;--orange-bg:rgba(224,124,60,0.10);
-  --r:12px;--rs:8px;--rx:6px;--nb:60px;
+  --r:12px;--rs:8px;--rx:6px;--sw:260px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;padding-bottom:var(--nb);}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI',sans-serif;}
 
 /* OVERLAYS */
 #loadingScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;}
@@ -67,16 +67,25 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .umbtn{display:flex;align-items:center;gap:7px;width:100%;background:none;border:none;color:var(--red);font-size:12px;padding:6px 8px;cursor:pointer;border-radius:var(--rx);}
 .umbtn:hover{background:var(--red-bg);}
 
-/* BOTTOM NAV — always visible */
-#bottomNav{position:fixed;left:0;right:0;bottom:0;z-index:100;background:var(--bg2);border-top:1px solid var(--border);height:var(--nb);padding-bottom:env(safe-area-inset-bottom);display:flex;overflow-x:auto;scrollbar-width:none;}
-#bottomNav::-webkit-scrollbar{display:none;}
-.bn{flex:1;min-width:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;color:var(--text3);font-size:9px;padding:5px 2px;cursor:pointer;transition:color .15s;flex-shrink:0;}
-.bn.active{color:var(--gold2);}
-.bn:active{background:var(--bg3);}
-.bnic{font-size:18px;line-height:1;}
+/* SIDEBAR */
+#sideOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
+#sideOverlay.open{opacity:1;pointer-events:all;}
+#sidebar{position:fixed;top:0;left:calc(-1 * var(--sw));bottom:0;width:var(--sw);background:var(--bg2);border-right:1px solid var(--border2);z-index:201;display:flex;flex-direction:column;transition:left .25s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+#sidebar.open{left:0;}
+.sb-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;border-bottom:1px solid var(--border);}
+.sb-logo{font-size:16px;font-weight:700;color:var(--gold2);letter-spacing:.05em;}
+.sb-close{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px 6px;border-radius:var(--rx);line-height:1;}
+.sb-close:hover{background:var(--bg3);color:var(--text);}
+.sb-nav{padding:8px 0;flex:1;}
+.sn{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;color:var(--text2);font-size:13px;padding:11px 16px;cursor:pointer;text-align:left;transition:all .15s;border-left:3px solid transparent;}
+.sn:hover{background:var(--bg3);color:var(--text);}
+.sn.active{color:var(--gold2);background:var(--gold-bg);border-left-color:var(--gold);}
+.sn-icon{font-size:17px;width:24px;text-align:center;flex-shrink:0;}
+.top-brand{background:none;border:none;color:var(--gold2);font-size:14px;font-weight:700;letter-spacing:.05em;cursor:pointer;padding:4px 6px;border-radius:var(--rx);transition:background .15s;}
+.top-brand:hover{background:var(--bg3);}
 
 /* PAGES */
-.page{display:none;max-width:900px;margin:0 auto;padding:16px 14px 90px;}
+.page{display:none;max-width:900px;margin:0 auto;padding:16px 14px 30px;}
 .page.active{display:block;}
 .ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap;}
 .pt{font-size:18px;font-weight:600;}
@@ -286,7 +295,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
 <!-- TOP BAR -->
 <div id="topBar" style="display:none">
   <div class="top-inner">
-    <div class="top-brand">☽ Lahza</div>
+    <button class="top-brand" onclick="openSidebar()">☽ Lahza</button>
     <div class="top-right">
       <div class="top-date" id="topDate"></div>
       <div class="sync-dot ok" id="syncDot"></div>
@@ -299,16 +308,25 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
   </div>
 </div>
 
-<!-- BOTTOM NAV -->
-<nav id="bottomNav">
-  <button class="bn active" data-page="bugun" onclick="showPage('bugun',event)"><span class="bnic">🏠</span>Bugun</button>
-  <button class="bn" data-page="namoz" onclick="showPage('namoz',event)"><span class="bnic">🕌</span>Namoz</button>
-  <button class="bn" data-page="ilm" onclick="showPage('ilm',event)"><span class="bnic">📚</span>Ilm</button>
-  <button class="bn" data-page="moliya" onclick="showPage('moliya',event)"><span class="bnic">💰</span>Moliya</button>
-  <button class="bn" data-page="muhasaba" onclick="showPage('muhasaba',event)"><span class="bnic">📝</span>Muhasaba</button>
-  <button class="bn" data-page="soglik" onclick="showPage('soglik',event)"><span class="bnic">🌙</span>Sog'liq</button>
-  <button class="bn" data-page="reja" onclick="showPage('reja',event)"><span class="bnic">🎯</span>Reja</button>
-  <button class="bn" data-page="sozlamalar" onclick="showPage('sozlamalar',event)"><span class="bnic">⚙</span>Sozlama</button>
+<!-- SIDEBAR OVERLAY -->
+<div id="sideOverlay" onclick="closeSidebar()"></div>
+
+<!-- SIDEBAR -->
+<nav id="sidebar">
+  <div class="sb-head">
+    <span class="sb-logo">☽ Lahza</span>
+    <button class="sb-close" onclick="closeSidebar()">✕</button>
+  </div>
+  <div class="sb-nav">
+    <button class="sn active" data-page="bugun" onclick="showPage('bugun',event)"><span class="sn-icon">🏠</span>Bugun</button>
+    <button class="sn" data-page="namoz" onclick="showPage('namoz',event)"><span class="sn-icon">🕌</span>Namoz</button>
+    <button class="sn" data-page="ilm" onclick="showPage('ilm',event)"><span class="sn-icon">📚</span>Ilm</button>
+    <button class="sn" data-page="moliya" onclick="showPage('moliya',event)"><span class="sn-icon">💰</span>Moliya</button>
+    <button class="sn" data-page="muhasaba" onclick="showPage('muhasaba',event)"><span class="sn-icon">📝</span>Muhasaba</button>
+    <button class="sn" data-page="soglik" onclick="showPage('soglik',event)"><span class="sn-icon">🌙</span>Sog'liq</button>
+    <button class="sn" data-page="reja" onclick="showPage('reja',event)"><span class="sn-icon">🎯</span>Reja</button>
+    <button class="sn" data-page="sozlamalar" onclick="showPage('sozlamalar',event)"><span class="sn-icon">⚙</span>Sozlamalar</button>
+  </div>
 </nav>
 
 <div id="toast"></div>
@@ -680,12 +698,21 @@ function updateDateLabels() {
 let curPage = 'bugun';
 function showPage(id, e) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.bn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.sn').forEach(b => b.classList.remove('active'));
   document.getElementById('page-' + id).classList.add('active');
   document.querySelectorAll('[data-page="' + id + '"]').forEach(b => b.classList.add('active'));
   curPage = id;
   activeDate = todayStr();
+  closeSidebar();
   renderPage(id);
+}
+function openSidebar() {
+  document.getElementById('sidebar').classList.add('open');
+  document.getElementById('sideOverlay').classList.add('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sideOverlay').classList.remove('open');
 }
 function renderPage(id) {
   if(id==='bugun') renderBugun();
