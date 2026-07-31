@@ -636,6 +636,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     </div>
     <button class="btn bsm" onclick="addTx()">Qo'shish</button>
   </div>
+  <div id="mCharts"></div>
   <div class="card">
     <div class="ctitle">📋 Yozuvlar</div>
     <div class="tw"><table><thead><tr><th>Sana</th><th>Tur</th><th>Kategoriya</th><th>Tavsif</th><th>Miqdor</th><th></th></tr></thead><tbody id="txBody"></tbody></table></div>
@@ -1433,6 +1434,59 @@ async function renderMoliya() {
   document.getElementById('mExp').textContent=exp.toLocaleString();
   document.getElementById('mBal').textContent=bal.toLocaleString();
   document.getElementById('mBal').style.color=bal>=0?'var(--gold2)':'var(--red)';
+
+  // ── Charts ──────────────────────────────────────────────────────
+  const chartsEl = document.getElementById('mCharts');
+  if (chartsEl && txs.length) {
+    // 6-month trend: income vs expense bars
+    const now = new Date();
+    const months = [];
+    for (let i=5; i>=0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
+      months.push({ y: d.getFullYear(), m: d.getMonth(), lbl: MN[d.getMonth()].slice(0,3) });
+    }
+    const mInc = months.map(({y,m})=>txs.filter(t=>t.type==='kirim'&&new Date(t.date).getFullYear()===y&&new Date(t.date).getMonth()===m).reduce((s,t)=>s+t.amt,0));
+    const mExp = months.map(({y,m})=>txs.filter(t=>t.type==='chiqim'&&new Date(t.date).getFullYear()===y&&new Date(t.date).getMonth()===m).reduce((s,t)=>s+t.amt,0));
+    const maxVal = Math.max(...mInc, ...mExp, 1);
+    const trendBars = months.map(({lbl},i)=>`
+      <div class="mcw" style="gap:1px">
+        <div style="display:flex;gap:2px;align-items:flex-end;height:60px">
+          <div style="flex:1;border-radius:3px 3px 0 0;background:var(--green);min-height:2px;height:${Math.round(mInc[i]/maxVal*60)}px"></div>
+          <div style="flex:1;border-radius:3px 3px 0 0;background:var(--red);min-height:${mExp[i]?'2':'0'}px;height:${Math.round(mExp[i]/maxVal*60)}px"></div>
+        </div>
+        <div class="mcl">${lbl}</div>
+      </div>`).join('');
+
+    // Current month category breakdown
+    const curY=now.getFullYear(), curM=now.getMonth();
+    const curExp=txs.filter(t=>t.type==='chiqim'&&new Date(t.date).getFullYear()===curY&&new Date(t.date).getMonth()===curM);
+    const catMap={};
+    curExp.forEach(t=>{ catMap[t.cat]=(catMap[t.cat]||0)+t.amt; });
+    const catTotal=curExp.reduce((s,t)=>s+t.amt,0)||1;
+    const catRows=Object.entries(catMap).sort((a,b)=>b[1]-a[1]).map(([cat,amt])=>`
+      <div style="margin-bottom:7px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px">
+          <span style="color:var(--text2)">${cat}</span>
+          <span style="color:var(--text3)">${Math.round(amt/catTotal*100)}%</span>
+        </div>
+        <div class="pw"><div class="pbar" style="width:${Math.round(amt/catTotal*100)}%;background:var(--red)"></div></div>
+      </div>`).join('');
+
+    chartsEl.innerHTML=`
+      <div class="card">
+        <div class="ctitle">📈 Oylik trend (6 oy)</div>
+        <div class="mood-chart" style="height:60px">${trendBars}</div>
+        <div style="display:flex;gap:12px;margin-top:6px;font-size:10px;color:var(--text3)">
+          <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--green);margin-right:3px"></span>Kirim</span>
+          <span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--red);margin-right:3px"></span>Chiqim</span>
+        </div>
+      </div>
+      ${catRows?`<div class="card">
+        <div class="ctitle">🗂 Joriy oy chiqimlari</div>
+        ${catRows}
+      </div>`:''}`;
+  } else if (chartsEl) { chartsEl.innerHTML=''; }
+
   const tbody=document.getElementById('txBody');
   if(!txs.length){tbody.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--text3);padding:20px">Yozuv yo\'q</td></tr>';return;}
   tbody.innerHTML=txs.map(t=>`<tr>
