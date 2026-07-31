@@ -603,6 +603,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <div class="fg"><label>O'rgangan narsa</label><textarea id="lNote" placeholder="Bugun nima bilib oldim..." rows="2"></textarea></div>
     <button class="btn bsm" onclick="addLearnSession()">Saqlash</button>
   </div>
+  <div id="ilmChart"></div>
   <div class="card"><div class="ctitle">📖 Sessiyalar</div><div id="learnList"></div></div>
   <hr>
   <div class="sec-lbl">📖 Yodlash / Hifz</div>
@@ -1336,6 +1337,26 @@ async function renderIlm() {
   document.getElementById('lMin').textContent=totMin;
   document.getElementById('lPg').textContent=totPg;
   document.getElementById('lStr').textContent=streak;
+
+  // Haftalik o'qish vaqti grafigi (oxirgi 7 kun)
+  const chartEl = document.getElementById('ilmChart');
+  if (chartEl) {
+    const dates = getLast7();
+    const dayMins = dates.map(d => sessions.filter(s=>s.date===d).reduce((s,ss)=>s+ss.mins,0));
+    const maxMin = Math.max(...dayMins, 1);
+    const bars = dates.map((d,i)=>{
+      const h = Math.round(dayMins[i]/maxMin*100);
+      return `<div class="mcw">
+        <div class="mcbar" style="height:${h}%;background:var(--purple);min-height:${dayMins[i]?'4px':'2px'}"></div>
+        <div class="mcl">${DS[new Date(d+'T00:00:00').getDay()]}</div>
+      </div>`;
+    }).join('');
+    chartEl.innerHTML=`<div class="card">
+      <div class="ctitle">⏱ Haftalik o'qish vaqti</div>
+      <div class="mood-chart">${bars}</div>
+      <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:4px">daqiqa / kun</div>
+    </div>`;
+  }
 
   const list=document.getElementById('learnList');
   if(!sessions.length){ list.innerHTML='<div class="empty">📚 Hali sessiya yo\'q</div>'; }
