@@ -2006,6 +2006,8 @@ async function boot() {
         document.getElementById('topBar').style.display='';
         renderUserInfo(user); setSyncDot('ok');
         renderBugun();
+        // Schedule today's prayer notifications regardless of which page is open
+        fetchPrayerTimes(todayStr()).then(t=>{ if(t) schedulePrayerNotifs(t); }).catch(()=>{});
       } else if(event==='SIGNED_OUT'){
         showLoginScreen(); document.getElementById('loadingScreen').style.display='none';
       }
