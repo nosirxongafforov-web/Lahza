@@ -1656,29 +1656,27 @@ function tarixShift(d) {
   renderTarix();
 }
 
-async function renderTarix() {
-  const nav = document.getElementById('tarixNavTitle');
-  const cal = document.getElementById('tarixCal');
-  if (!nav||!cal) return;
-  if (tarixView === 'month') {
-    nav.textContent = MN[tarixMonth] + ' ' + tarixYear;
-    await renderTarixMonth(cal);
-  } else {
-    nav.textContent = tarixYear + ' yil';
-    await renderTarixYear(cal);
-  }
-  await renderTarixStats();
+// Batch-fetch all hstate/prayers/daydata for a date prefix (YYYY-MM or YYYY).
+// Returns { habits, hstates, prayers, daydatas } — each a { [YYYY-MM-DD]: value } map.
+async function batchFetchScoreData(prefix) {
+  const habits = await getHabits();
+  const toMap = rows => {
+    const m = {};
+    (rows.data || []).forEach(r => { m[r.key.slice(-10)] = r.value; });
+    return m;
+  };
+  const [hRows, pRows, dRows] = await Promise.all([
+    sb.from('ht_store').select('key,value').like('key', `hstate_${prefix}%`),
+    sb.from('ht_store').select('key,value').like('key', `prayers_${prefix}%`),
+    sb.from('ht_store').select('key,value').like('key', `daydata_${prefix}%`),
+  ]);
+  return { habits, hstates: toMap(hRows), prayers: toMap(pRows), daydatas: toMap(dRows) };
 }
 
-async function getDayScore(dateStr) {
-  const [hs, prayers, daydata, habits] = await Promise.all([
-    dbGetSafe('hstate_'+dateStr),
-    dbGetSafe('prayers_'+dateStr),
-    dbGetSafe('daydata_'+dateStr),
-    getHabits(),
-  ]);
-  const hstate=hs||{}, pr=prayers||{}, dd=daydata||{};
-  const habDone = habits.filter(h=>hstate[h.id]).length;
+// Pure score computation — no Supabase calls.
+function computeDayScore(hstate, prayers, daydata, habits) {
+  const hs=hstate||{}, pr=prayers||{}, dd=daydata||{};
+  const habDone = habits.filter(h=>hs[h.id]).length;
   const pDone = PRAYERS_ALL.filter(p=>pr[p]==='vaqtida'||pr[p]==='qazo').length;
   const tasks = dd.tasks||[];
   const taskDone = tasks.filter(t=>t.done).length;
@@ -1687,7 +1685,16 @@ async function getDayScore(dateStr) {
   const habScore = habits.length ? habDone/habits.length : 0;
   const pScore = pDone/5;
   const tScore = taskTotal ? taskDone/taskTotal : 0;
-  return Math.round((habScore*40 + pScore*40 + tScore*20));
+  return Math.round(habScore*40 + pScore*40 + tScore*20);
+}
+
+// getDayScore kept for showDayPopup (single-day popup — 3 queries is fine).
+async function getDayScore(dateStr) {
+  const [hs, pr, dd, habits] = await Promise.all([
+    dbGetSafe('hstate_'+dateStr), dbGetSafe('prayers_'+dateStr),
+    dbGetSafe('daydata_'+dateStr), getHabits(),
+  ]);
+  return computeDayScore(hs, pr, dd, habits);
 }
 
 function scoreToColor(score) {
@@ -1699,45 +1706,56 @@ function scoreToColor(score) {
   return 'var(--red)';
 }
 
-async function renderTarixMonth(container) {
+async function renderTarix() {
+  const nav = document.getElementById('tarixNavTitle');
+  const cal = document.getElementById('tarixCal');
+  if (!nav||!cal) return;
+  const prefix = tarixView==='month'
+    ? tarixYear+'-'+String(tarixMonth+1).padStart(2,'0')
+    : String(tarixYear);
+  nav.textContent = tarixView==='month' ? MN[tarixMonth]+' '+tarixYear : tarixYear+' yil';
+  const batch = await batchFetchScoreData(prefix);
+  if (tarixView==='month') renderTarixMonth(cal, batch);
+  else renderTarixYear(cal, batch);
+  renderTarixStats(batch);
+}
+
+function renderTarixMonth(container, batch) {
   const today = todayStr();
+  const { habits, hstates, prayers, daydatas } = batch;
   const firstDay = new Date(tarixYear, tarixMonth, 1).getDay();
   const daysInMonth = new Date(tarixYear, tarixMonth+1, 0).getDate();
-  const offset = (firstDay+6)%7; // Monday-first
-
-  const dateStrs = [];
-  for (let d=1; d<=daysInMonth; d++) {
-    const ds = tarixYear+'-'+String(tarixMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    dateStrs.push(ds);
-  }
-  const scores = await Promise.all(dateStrs.map(ds => ds<=today ? getDayScore(ds) : Promise.resolve(null)));
+  const offset = (firstDay+6)%7;
+  const mPfx = tarixYear+'-'+String(tarixMonth+1).padStart(2,'0');
 
   let html = '<div class="cal-grid">';
   ['Du','Se','Ch','Pa','Ju','Sh','Ya'].forEach(d=>{html+=`<div class="cal-cell" style="font-size:9px;color:var(--text3);padding:4px 0">${d}</div>`;});
   for(let i=0;i<offset;i++) html+='<div class="cal-cell"></div>';
-  dateStrs.forEach((ds,i)=>{
-    const d=i+1, sc=scores[i];
+  for(let d=1;d<=daysInMonth;d++){
+    const ds = mPfx+'-'+String(d).padStart(2,'0');
+    const sc = ds<=today ? computeDayScore(hstates[ds], prayers[ds], daydatas[ds], habits) : null;
     const isToday=ds===today, isFuture=ds>today;
     const dot=(!isFuture&&sc!==null)?`<div class="cal-dot" style="background:${scoreToColor(sc)}"></div>`:'';
     html+=`<div class="cal-cell${isToday?' today':''}" onclick="${!isFuture?`showDayPopup('${ds}',${sc??'null'})`:''}">
       <div style="${isToday?'font-weight:700;color:var(--gold)':isFuture?'color:var(--text3)':''}">${d}</div>${dot}
     </div>`;
-  });
+  }
   html+='</div>';
   container.innerHTML=html;
 }
 
-async function renderTarixYear(container) {
+function renderTarixYear(container, batch) {
   const today = todayStr();
+  const { habits, hstates, prayers, daydatas } = batch;
   let html='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">';
   for(let m=0;m<12;m++){
-    const daysInMonth=new Date(tarixYear,m+1,0).getDate();
-    let monthScores=[], totalScore=0, counted=0;
+    const mPfx = tarixYear+'-'+String(m+1).padStart(2,'0');
+    const daysInMonth = new Date(tarixYear,m+1,0).getDate();
+    let totalScore=0, counted=0;
     for(let d=1;d<=daysInMonth;d++){
-      const ds=tarixYear+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      const ds = mPfx+'-'+String(d).padStart(2,'0');
       if(ds>today) break;
-      const sc=await getDayScore(ds);
-      monthScores.push(sc);
+      const sc = computeDayScore(hstates[ds], prayers[ds], daydatas[ds], habits);
       if(sc!==null){totalScore+=sc;counted++;}
     }
     const avg=counted?Math.round(totalScore/counted):null;
@@ -1751,21 +1769,23 @@ async function renderTarixYear(container) {
   container.innerHTML=html;
 }
 
-async function renderTarixStats() {
+function renderTarixStats(batch) {
   const el=document.getElementById('tarixStats');
   if(!el) return;
   const today=todayStr();
-  let total=0, count=0, streak=0, maxStreak=0, cur=0;
+  const { habits, hstates, prayers, daydatas } = batch;
   const days=[];
   if(tarixView==='month'){
     const dim=new Date(tarixYear,tarixMonth+1,0).getDate();
-    for(let d=1;d<=dim;d++) days.push(tarixYear+'-'+String(tarixMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'));
+    const mPfx=tarixYear+'-'+String(tarixMonth+1).padStart(2,'0');
+    for(let d=1;d<=dim;d++) days.push(mPfx+'-'+String(d).padStart(2,'0'));
   } else {
-    for(let m=0;m<12;m++){const dim=new Date(tarixYear,m+1,0).getDate();for(let d=1;d<=dim;d++) days.push(tarixYear+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'));}
+    for(let m=0;m<12;m++){const dim=new Date(tarixYear,m+1,0).getDate();const mP=tarixYear+'-'+String(m+1).padStart(2,'0');for(let d=1;d<=dim;d++) days.push(mP+'-'+String(d).padStart(2,'0'));}
   }
+  let total=0, count=0, maxStreak=0, cur=0;
   for(const ds of days){
     if(ds>today) break;
-    const sc=await getDayScore(ds);
+    const sc=computeDayScore(hstates[ds], prayers[ds], daydatas[ds], habits);
     if(sc!==null){total+=sc;count++;if(sc>=60){cur++;maxStreak=Math.max(maxStreak,cur);}else cur=0;}
   }
   const avg=count?Math.round(total/count):null;
