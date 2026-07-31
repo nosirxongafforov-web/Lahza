@@ -19,7 +19,7 @@ Lahza is a personal life management PWA built for a single user (nosirxongafforo
 | Database | Supabase — `ht_store` table: `key TEXT, value JSONB` |
 | PWA | `manifest.json` + `sw.js` (cache name: `lahza-v2`) |
 | Prayer times | Aladhan API — Fergana, `lat=40.3834, lon=71.7849, method=1` |
-| Icon | `icon.svg` — pure SVG crescent path, tilted 28°, `#E8E6E0` on `#0f0f0f` |
+| Icon | `icon.svg` — hilol path (28° burilgan) saqlangan, fon endi tong osmoni gradienti (`#0f0f0f → #161a2c → #3a2438`), yuqori chapda Venera nuqtasi (`#e8c96a`) |
 | JS libraries | `@supabase/supabase-js@2` via CDN (only external dependency) |
 
 ### Supabase Pattern
@@ -394,4 +394,3 @@ DU = ['Yakshanba','Dushanba',...,'Shanba']
 | 5 | **Ilm — basic UI** | Goals/sessions have no progress percentage visualization or completion graph. |
 | 6 | **Hisobot — read-only charts** | Mood/sleep bars are rendered from stored data; no direct input on this page (input is on Sog'liq). |
 | 7 | **Schedule override editor styling** | The override editor inline in Bugun is functional but doesn't fully match the Sozlamalar editor style. |
-| 8 | **manifest theme_color** | `manifest.json` still has `theme_color: #c9a84c` (gold). Should be `#111111` to match the app chrome. |
