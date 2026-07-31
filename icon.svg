@@ -1,4 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="40" fill="#111111"/>
-  <text x="96" y="140" font-size="120" text-anchor="middle" fill="#c9a84c">☽</text>
+  <rect width="192" height="192" rx="40" fill="#0f0f0f"/>
+  <defs>
+    <clipPath id="c"><circle cx="96" cy="96" r="58"/></clipPath>
+  </defs>
+  <!-- Outer moon disc -->
+  <circle cx="96" cy="96" r="58" fill="#E8E6E0"/>
+  <!-- Shadow circle offset left to carve waxing crescent -->
+  <circle cx="74" cy="96" r="52" fill="#0f0f0f" clip-path="url(#c)"/>
 </svg>

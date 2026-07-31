@@ -56,7 +56,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .sync-dot.saving{background:var(--gold);animation:blink .8s infinite;}
 .sync-dot.err{background:var(--red);}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-.top-date{font-size:10px;color:var(--text3);}
+.top-date{font-size:10px;color:var(--text3);background:none;border:1px solid var(--border2);border-radius:var(--rx);padding:4px 10px;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:inherit;}
+.top-date:hover{border-color:var(--text3);color:var(--text);}
+#datePicker{position:absolute;top:42px;right:0;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--rs);padding:10px;min-width:220px;z-index:350;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5);}
+#datePicker.open{display:block;}
+.dp-nav{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.dp-nav-title{flex:1;text-align:center;font-size:12px;font-weight:600;color:var(--text);}
+.dp-nb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rx);color:var(--text2);width:26px;height:26px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.dp-nb:hover{border-color:var(--border2);color:var(--text);}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+.dp-head{font-size:8px;color:var(--text3);text-align:center;padding:2px 0;text-transform:uppercase;}
+.dp-cell{background:var(--bg3);border-radius:5px;padding:5px 2px;text-align:center;cursor:pointer;font-size:10px;color:var(--text2);transition:background .1s;}
+.dp-cell:hover{background:var(--bg4);color:var(--text);}
+.dp-cell.dp-today{border:1px solid var(--border2);color:var(--text);}
+.dp-cell.dp-sel{background:var(--gold);color:#111;font-weight:700;}
+.dp-cell.dp-empty{background:transparent;pointer-events:none;}
+.dp-cell.dp-future{opacity:.35;pointer-events:none;}
 .user-btn{display:flex;align-items:center;gap:6px;cursor:pointer;padding:5px 7px;border-radius:var(--rx);background:none;border:none;}
 .user-btn:hover{background:var(--bg3);}
 .uavatar{width:26px;height:26px;border-radius:50%;object-fit:cover;border:1px solid var(--border2);}
@@ -92,9 +107,83 @@ body.light{
   --text:#1a1a18;--text2:#4a4a46;--text3:#8a8a86;
   --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
 }
-body.light .top-brand{border-color:rgba(0,0,0,0.14);}
+body.light .top-brand{border-color:rgba(0,0,0,0.14);color:#1a1a18;}
 body.light #sideOverlay{background:rgba(0,0,0,.35);}
 body.light .user-menu{box-shadow:0 8px 24px rgba(0,0,0,.15);}
+/* login */
+body.light .lbox{background:var(--bg2);border-color:var(--border2);}
+body.light .login-btn{background:var(--bg3);border-color:var(--border2);color:var(--text);}
+body.light .login-btn:hover{border-color:var(--gold);background:var(--gold-bg);color:var(--gold);}
+/* cards & inputs */
+body.light .card{background:var(--bg2);border-color:var(--border2);}
+body.light input,body.light textarea,body.light select{background:var(--bg3);border-color:var(--border2);color:var(--text);}
+body.light input:focus,body.light textarea:focus{border-color:var(--gold);}
+/* prayer grid */
+body.light .pb{background:var(--bg3);border-color:var(--border);}
+body.light .pb.vaqtida{background:var(--green-bg);border-color:var(--green);}
+body.light .pb.qazo{background:var(--orange-bg);border-color:var(--orange);}
+/* habits */
+body.light .hrow{background:var(--bg3);}
+body.light .hrow:hover{background:var(--bg4);}
+body.light .hck{border-color:var(--border2);}
+/* tasks */
+body.light .trow{border-color:var(--border);}
+body.light .tinp{color:var(--text);}
+/* schedule rows */
+body.light .srow{background:var(--bg3);}
+body.light .srow.cur{background:rgba(0,0,0,.05);}
+/* metrics */
+body.light .metric{background:var(--bg3);}
+/* week grid */
+body.light .wd{background:var(--bg3);}
+/* progress */
+body.light .pw{background:var(--bg4);}
+/* sleep quality */
+body.light .sqb{background:var(--bg3);border-color:var(--border);}
+body.light .sqb.sel{background:var(--gold-bg);border-color:var(--gold);color:var(--gold);}
+/* goal & memo */
+body.light .goal-card{background:var(--bg3);}
+body.light .memo-card{background:var(--bg3);}
+body.light .memo-portion{background:var(--bg4);}
+/* edit rows */
+body.light .ei{background:var(--bg3);}
+body.light .ei select{background:var(--bg4);border-color:var(--border);}
+/* tables */
+body.light th,body.light td{border-color:var(--border);}
+body.light tr:hover td{background:var(--bg3);}
+/* sidebar */
+body.light #sidebar{background:var(--bg2);border-right-color:var(--border2);}
+body.light .sb-head{border-bottom-color:var(--border);}
+body.light .sn:hover{background:var(--bg3);}
+body.light .sn.active{background:rgba(0,0,0,.05);color:var(--text);}
+/* top bar */
+body.light #topBar{background:var(--bg2);border-bottom-color:var(--border);}
+body.light .user-btn:hover{background:var(--bg3);}
+body.light .umbtn{color:var(--text2);}
+body.light .umbtn:hover{background:var(--bg3);color:var(--text);}
+body.light .umbtn.sign-out-btn{color:var(--red);}
+body.light .umbtn.sign-out-btn:hover{background:var(--red-bg);}
+/* countdown */
+body.light .countdown-box{background:var(--bg3);border-color:var(--border2);}
+/* calendar */
+body.light .cal-cell{background:var(--bg3);border-color:transparent;}
+body.light .cal-cell:hover{background:var(--bg4);}
+body.light .cal-cell.cal-today{border-color:var(--border2);}
+body.light .cal-view-btn{background:var(--bg3);border-color:var(--border);}
+body.light .cal-view-btn.active{background:var(--bg4);border-color:var(--border2);}
+body.light .yr-cell{background:var(--bg3);}
+/* day popup */
+body.light .dpop-box{background:var(--bg2);border-color:var(--border2);}
+/* toast */
+body.light #toast{background:var(--bg2);border-color:var(--border2);}
+/* reja banner */
+body.light .reja-banner{background:var(--bg3);border-color:var(--border2);}
+/* stat items */
+body.light .cal-stat-item{background:var(--bg3);}
+/* mini date picker */
+body.light #datePicker{background:var(--bg2);border-color:var(--border2);box-shadow:0 8px 24px rgba(0,0,0,.12);}
+body.light .dp-cell{background:var(--bg3);}
+body.light .dp-cell:hover{background:var(--bg4);}
 
 /* PAGES */
 .page{display:none;max-width:900px;margin:0 auto;padding:16px 14px 30px;}
@@ -369,7 +458,15 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
   <div class="top-inner">
     <button class="top-brand" onclick="openSidebar()">☾ Lahza</button>
     <div class="top-right">
-      <div class="top-date" id="topDate"></div>
+      <button class="top-date" id="topDate" onclick="toggleDatePicker(event)"></button>
+      <div id="datePicker">
+        <div class="dp-nav">
+          <button class="dp-nb" onclick="dpShift(-1)">‹</button>
+          <div class="dp-nav-title" id="dpNavTitle"></div>
+          <button class="dp-nb" onclick="dpShift(1)">›</button>
+        </div>
+        <div class="dp-grid" id="dpGrid"></div>
+      </div>
       <div class="sync-dot ok" id="syncDot"></div>
       <button class="user-btn" onclick="toggleUserMenu()" id="userBtn"></button>
       <div class="user-menu" id="userMenu">
@@ -413,7 +510,6 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
       <button class="dnb" onclick="shiftDate(-1)">‹</button>
       <div class="dlbl" id="bugunLbl"></div>
       <button class="dnb" onclick="shiftDate(1)">›</button>
-      <button class="tbtn" onclick="goToday()">Bugun</button>
     </div>
   </div>
   <div class="g3" style="margin-bottom:10px">
@@ -947,9 +1043,13 @@ async function renderBugun() {
   const rejaBanner = document.getElementById('rejaBanner');
   if (rejaBanner) rejaBanner.style.display = isFuture ? 'block' : 'none';
 
-  // Override edit button only visible for today
+  // Override edit button visible for today and tomorrow
   const overrideBtn = document.getElementById('schedOverrideBtn');
-  if (overrideBtn) overrideBtn.style.display = isT ? 'inline-flex' : 'none';
+  const isTomorrow = activeDate === tomorrow;
+  if (overrideBtn) {
+    overrideBtn.style.display = (isT || isTomorrow) ? 'inline-flex' : 'none';
+    overrideBtn.textContent = isTomorrow ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
+  }
 
   const [baseSched, habits, hs, prayers, daydata, timings, override] = await Promise.all([
     getSched(), getHabits(),
@@ -1801,7 +1901,57 @@ function toggleTheme() {
 document.addEventListener('click',function(e){
   const m=document.getElementById('userMenu'),b=document.getElementById('userBtn');
   if(m&&!m.contains(e.target)&&b&&!b.contains(e.target)) m.classList.remove('open');
+  const dp=document.getElementById('datePicker'),td=document.getElementById('topDate');
+  if(dp&&!dp.contains(e.target)&&td&&!td.contains(e.target)) dp.classList.remove('open');
 });
+
+// ─── DATE PICKER ─────────────────────────────────────────────────
+let dpMonth = new Date().getMonth();
+let dpYear = new Date().getFullYear();
+
+function toggleDatePicker(e) {
+  e.stopPropagation();
+  const dp = document.getElementById('datePicker');
+  if (dp.classList.contains('open')) { dp.classList.remove('open'); return; }
+  const ad = new Date(activeDate + 'T12:00:00');
+  dpMonth = ad.getMonth();
+  dpYear = ad.getFullYear();
+  renderDatePicker();
+  dp.classList.add('open');
+}
+
+function dpShift(d) {
+  dpMonth += d;
+  if (dpMonth > 11) { dpMonth = 0; dpYear++; }
+  if (dpMonth < 0)  { dpMonth = 11; dpYear--; }
+  renderDatePicker();
+}
+
+function renderDatePicker() {
+  document.getElementById('dpNavTitle').textContent = MN[dpMonth] + ' ' + dpYear;
+  const today = todayStr();
+  const tomorrow = localDateStr(new Date(new Date().getTime() + 86400000));
+  const firstDay = new Date(dpYear, dpMonth, 1).getDay();
+  const dim = new Date(dpYear, dpMonth + 1, 0).getDate();
+  const offset = (firstDay + 6) % 7;
+  let html = ['Du','Se','Ch','Pa','Ju','Sh','Ya'].map(d=>`<div class="dp-head">${d}</div>`).join('');
+  for (let i = 0; i < offset; i++) html += '<div class="dp-cell dp-empty"></div>';
+  for (let d = 1; d <= dim; d++) {
+    const ds = dpYear + '-' + String(dpMonth+1).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+    const isFut = ds > tomorrow;
+    const isTod = ds === today;
+    const isSel = ds === activeDate;
+    html += `<div class="dp-cell${isFut?' dp-future':''}${isTod?' dp-today':''}${isSel?' dp-sel':''}"
+      onclick="pickDate('${ds}')">${d}</div>`;
+  }
+  document.getElementById('dpGrid').innerHTML = html;
+}
+
+function pickDate(ds) {
+  activeDate = ds;
+  document.getElementById('datePicker').classList.remove('open');
+  refreshPage();
+}
 function renderUserInfo(user) {
   const btn=document.getElementById('userBtn'), nm=document.getElementById('umName'); if(!btn) return;
   const name=user.user_metadata?.full_name||user.email||'';
