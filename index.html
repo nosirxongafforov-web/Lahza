@@ -73,7 +73,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 #sidebar{position:fixed;top:0;left:calc(-1 * var(--sw));bottom:0;width:var(--sw);background:var(--bg2);border-right:1px solid var(--border2);z-index:201;display:flex;flex-direction:column;transition:left .25s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
 #sidebar.open{left:0;}
 .sb-head{display:flex;align-items:center;justify-content:space-between;padding:16px 16px 12px;border-bottom:1px solid var(--border);}
-.sb-logo{font-size:16px;font-weight:700;color:var(--gold2);letter-spacing:.05em;}
+.sb-logo{font-size:16px;font-weight:700;color:#E8E6E0;letter-spacing:.05em;}
 .sb-close{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px 6px;border-radius:var(--rx);line-height:1;}
 .sb-close:hover{background:var(--bg3);color:var(--text);}
 .sb-nav{padding:8px 0;flex:1;}
@@ -81,8 +81,20 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .sn:hover{background:var(--bg3);color:var(--text);}
 .sn.active{color:var(--gold2);background:var(--gold-bg);border-left-color:var(--gold);}
 .sn-icon{font-size:17px;width:24px;text-align:center;flex-shrink:0;}
-.top-brand{background:none;border:none;color:var(--gold2);font-size:14px;font-weight:700;letter-spacing:.05em;cursor:pointer;padding:4px 6px;border-radius:var(--rx);transition:background .15s;}
-.top-brand:hover{background:var(--bg3);}
+.top-brand{background:none;border:1px solid rgba(255,255,255,0.12);color:#E8E6E0;font-size:14px;font-weight:700;letter-spacing:.05em;cursor:pointer;padding:6px 10px;border-radius:8px;transition:all .15s;}
+.top-brand:hover{background:var(--bg3);border-color:var(--gold);}
+.theme-btn{background:none;border:none;color:var(--text2);font-size:16px;cursor:pointer;padding:4px 6px;border-radius:var(--rx);line-height:1;transition:color .15s;}
+.theme-btn:hover{color:var(--text);}
+
+/* LIGHT MODE */
+body.light{
+  --bg:#f5f5f0;--bg2:#ebebE6;--bg3:#e0e0da;--bg4:#d5d5cf;
+  --text:#1a1a18;--text2:#4a4a46;--text3:#8a8a86;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+}
+body.light .top-brand{border-color:rgba(0,0,0,0.14);}
+body.light #sideOverlay{background:rgba(0,0,0,.35);}
+body.light .user-menu{box-shadow:0 8px 24px rgba(0,0,0,.15);}
 
 /* PAGES */
 .page{display:none;max-width:900px;margin:0 auto;padding:16px 14px 30px;}
@@ -273,7 +285,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
 <!-- LOGIN -->
 <div id="loginScreen">
   <div class="lbox">
-    <div class="llogo">☽</div>
+    <div class="llogo">☾</div>
     <div class="ltitle">Lahza</div>
     <div class="lsub">Shaxsiy hayot tizimingiz.<br>Davom etish uchun kiring.</div>
     <button class="login-btn" onclick="signInWithGoogle()">
@@ -287,7 +299,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
 <!-- LOADING -->
 <div id="loadingScreen">
   <div class="load-spinner"></div>
-  <div class="load-title">☽ Lahza</div>
+  <div class="load-title">☾ Lahza</div>
   <div class="load-sub" id="loadMsg">Ulanilmoqda...</div>
   <div id="loadError"></div>
 </div>
@@ -295,9 +307,10 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
 <!-- TOP BAR -->
 <div id="topBar" style="display:none">
   <div class="top-inner">
-    <button class="top-brand" onclick="openSidebar()">☽ Lahza</button>
+    <button class="top-brand" onclick="openSidebar()">☾ Lahza</button>
     <div class="top-right">
       <div class="top-date" id="topDate"></div>
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Yorug'/Qorong'u">◐</button>
       <div class="sync-dot ok" id="syncDot"></div>
       <button class="user-btn" onclick="toggleUserMenu()" id="userBtn"></button>
       <div class="user-menu" id="userMenu">
@@ -314,7 +327,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sb-head">
-    <span class="sb-logo">☽ Lahza</span>
+    <span class="sb-logo">☾ Lahza</span>
     <button class="sb-close" onclick="closeSidebar()">✕</button>
   </div>
   <div class="sb-nav">
@@ -322,7 +335,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <button class="sn" data-page="namoz" onclick="showPage('namoz',event)"><span class="sn-icon">🕌</span>Namoz</button>
     <button class="sn" data-page="ilm" onclick="showPage('ilm',event)"><span class="sn-icon">📚</span>Ilm</button>
     <button class="sn" data-page="moliya" onclick="showPage('moliya',event)"><span class="sn-icon">💰</span>Moliya</button>
-    <button class="sn" data-page="muhasaba" onclick="showPage('muhasaba',event)"><span class="sn-icon">📝</span>Muhasaba</button>
+    <button class="sn" data-page="muhasaba" onclick="showPage('muhasaba',event)"><span class="sn-icon">📝</span>Hisobot</button>
     <button class="sn" data-page="soglik" onclick="showPage('soglik',event)"><span class="sn-icon">🌙</span>Sog'liq</button>
     <button class="sn" data-page="reja" onclick="showPage('reja',event)"><span class="sn-icon">🎯</span>Reja</button>
     <button class="sn" data-page="sozlamalar" onclick="showPage('sozlamalar',event)"><span class="sn-icon">⚙</span>Sozlamalar</button>
@@ -467,7 +480,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
 <!-- PAGE: MUHASABA -->
 <div class="page" id="page-muhasaba">
   <div class="ph">
-    <div><div class="pt">Kunlik Muhasaba</div><div class="ps">Har kech yoz — o'zingga oshkora bo'l</div></div>
+    <div><div class="pt">Kunlik Hisobot</div><div class="ps">Har kech yoz — o'zingga oshkora bo'l</div></div>
     <div class="dnav">
       <button class="dnb" onclick="shiftDate(-1)">‹</button>
       <div class="dlbl" id="muhasabaLbl"></div>
@@ -499,7 +512,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <div class="fg"><label>Shukr — bugun nimadan xursandman?</label><textarea id="rShukr" rows="2" placeholder="Kichik narsalarga ham shukr..."></textarea></div>
     <button class="btn bsm" onclick="saveReview()">Saqlash</button>
   </div>
-  <div class="card"><div class="ctitle">📜 O'tgan muhasabalar</div><div id="reviewHist"></div></div>
+  <div class="card"><div class="ctitle">📜 O'tgan hisobotlar</div><div id="reviewHist"></div></div>
 </div>
 
 <!-- PAGE: SOG'LIQ -->
@@ -747,7 +760,6 @@ const DEF_SCHED = [
   {time:'22:00',label:'Uyqu',tag:'jism'},
 ];
 const DEF_HABITS = [
-  {id:'h1',label:"Bomdod o'qish",tag:'deen'},
   {id:'h2',label:"Qur'on tilovat (10 daq)",tag:'deen'},
   {id:'h3',label:'Sport / mashq (45 daq)',tag:'jism'},
   {id:'h4',label:'Sovuq suv / kontrasht',tag:'jism'},
@@ -825,21 +837,35 @@ async function schedulePrayerNotifs(timings) {
 async function renderBugun() {
   updateDateLabels();
   const isT = isToday(activeDate);
-  const [sched, habits, hs, prayers, daydata] = await Promise.all([
+  const [sched, habits, hs, prayers, daydata, timings] = await Promise.all([
     getSched(), getHabits(),
     dbGetSafe('hstate_'+activeDate),
     dbGetSafe('prayers_'+activeDate),
     dbGetSafe('daydata_'+activeDate),
+    fetchPrayerTimes(activeDate),
   ]);
   const hstate = hs||{}, pr = prayers||{}, dd = daydata||{};
 
-  // Schedule
+  // Schedule — annotate the block containing Asr time
+  const asrStr = timings?.Asr ? timings.Asr.slice(0,5) : null;
+  const asrMin = asrStr ? parseInt(asrStr)*60 + parseInt(asrStr.slice(3)) : -1;
+  function blockContainsAsr(timeRange) {
+    if (asrMin < 0) return false;
+    const m = timeRange.match(/^(\d+):(\d+)/);
+    const m2 = timeRange.match(/–(\d+):(\d+)/);
+    if (!m || !m2) return false;
+    const start = parseInt(m[1])*60+parseInt(m[2]);
+    const end = parseInt(m2[1])*60+parseInt(m2[2]);
+    return asrMin >= start && asrMin < end;
+  }
   const cur = isT ? getCurBlock(sched) : -1;
-  document.getElementById('schedList').innerHTML = sched.map((s,i) =>
-    `<div class="srow ${i===cur?'cur':''}">
+  document.getElementById('schedList').innerHTML = sched.map((s,i) => {
+    const asrNote = blockContainsAsr(s.time) ? ` <span style="font-size:10px;color:var(--blue);margin-left:4px">🕌 Asr ${asrStr}</span>` : '';
+    return `<div class="srow ${i===cur?'cur':''}">
       <div class="stime">${s.time}</div>
-      <div class="slbl">${s.label}${i===cur?' <span style="font-size:10px;color:var(--gold)">← hozir</span>':''}</div>
-    </div>`).join('');
+      <div class="slbl">${s.label}${i===cur?' <span style="font-size:10px;color:var(--gold)">← hozir</span>':''}${asrNote}</div>
+    </div>`;
+  }).join('');
 
   // Habits
   const doneCnt = habits.filter(h => hstate[h.id]).length;
@@ -847,7 +873,7 @@ async function renderBugun() {
     `<div class="hrow ${hstate[h.id]?'done':''}" ${isT?`onclick="toggleHabit('${h.id}')"`:''} style="${!isT?'cursor:default':''}">
       <div class="hck">${hstate[h.id]?'✓':''}</div>
       <div class="hlbl">${h.label}</div>
-      <span class="htag t${h.tag}">${h.tag}</span>
+      <span class="htag t${h.tag}">${h.tag==='deen'?'ruh':h.tag}</span>
     </div>`).join('') || '<div class="empty">Odat topilmadi</div>';
 
   // Tasks
@@ -882,11 +908,17 @@ function getCurBlock(sched) {
 
 async function toggleHabit(id) {
   if (!isToday(activeDate)) return;
-  const state = await dbGetSafe('hstate_'+activeDate)||{};
+  const state = _cache['hstate_'+activeDate] || await dbGetSafe('hstate_'+activeDate) || {};
   state[id] = !state[id];
   _cache['hstate_'+activeDate] = state;
-  await dbSet('hstate_'+activeDate, state);
-  renderBugun();
+  // Optimistic DOM update — no await, instant feedback
+  const row = [...document.querySelectorAll('#habitList .hrow')].find(r => r.getAttribute('onclick')?.includes(`'${id}'`));
+  if (row) {
+    row.classList.toggle('done', !!state[id]);
+    const ck = row.querySelector('.hck');
+    if (ck) ck.textContent = state[id] ? '✓' : '';
+  }
+  dbSet('hstate_'+activeDate, state); // background save, no await
 }
 
 function updateTaskText(i, val) { if(window._tasks) window._tasks[i].t = val; }
@@ -1119,7 +1151,7 @@ async function delTx(id) { const t=(await dbGetSafe('transactions')||[]).filter(
 
 // ─── MUHASABA ────────────────────────────────────────────────────
 const PILLARS=[
-  {id:'deen',name:'Deen',color:'var(--blue)'},
+  {id:'deen',name:'Ruh',color:'var(--blue)'},
   {id:'jism',name:'Jism',color:'var(--green)'},
   {id:'aql',name:'Aql',color:'var(--purple)'},
   {id:'pul',name:'Moliya',color:'var(--gold)'},
@@ -1186,7 +1218,7 @@ async function renderWeekScore() {
 async function saveReview() {
   if(!isToday(activeDate)) return;
   await dbSet('review_'+activeDate,{good:document.getElementById('rGood').value,bad:document.getElementById('rBad').value,tomorrow:document.getElementById('rTmr').value,shukr:document.getElementById('rShukr').value});
-  await renderWeekScore(); await renderRevHist(); toast('✅ Muhasaba saqlandi');
+  await renderWeekScore(); await renderRevHist(); toast('✅ Hisobot saqlandi');
 }
 async function renderRevHist() {
   const wrap=document.getElementById('reviewHist');
@@ -1381,6 +1413,13 @@ function showLoginScreen() {
 }
 function hideLoginScreen() { document.getElementById('loginScreen').classList.remove('show'); }
 function toggleUserMenu() { document.getElementById('userMenu').classList.toggle('open'); }
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  localStorage.setItem('lahza_theme', isLight ? 'light' : 'dark');
+}
+(function initTheme() {
+  if (localStorage.getItem('lahza_theme') === 'light') document.body.classList.add('light');
+})();
 document.addEventListener('click',function(e){
   const m=document.getElementById('userMenu'),b=document.getElementById('userBtn');
   if(m&&!m.contains(e.target)&&b&&!b.contains(e.target)) m.classList.remove('open');
