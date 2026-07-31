@@ -857,11 +857,50 @@ async function dbSet(key, value) {
     const { error } = await sb.from('ht_store').upsert({ key, value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
     if (error) throw error;
     setSyncDot('ok');
+    _pendingRemove(key);
   } catch(e) {
     setSyncDot('err');
     try { localStorage.setItem('lhz_' + key, JSON.stringify(value)); } catch(_) {}
+    _pendingAdd(key, value);
   }
 }
+
+function _pendingAdd(key, value) {
+  try {
+    const q = JSON.parse(localStorage.getItem('lhz_pending_queue')||'[]');
+    const idx = q.findIndex(i=>i.key===key);
+    const entry = { key, value, ts: Date.now() };
+    if (idx>=0) q[idx]=entry; else q.push(entry);
+    localStorage.setItem('lhz_pending_queue', JSON.stringify(q));
+  } catch(_) {}
+}
+
+function _pendingRemove(key) {
+  try {
+    const q = JSON.parse(localStorage.getItem('lhz_pending_queue')||'[]').filter(i=>i.key!==key);
+    localStorage.setItem('lhz_pending_queue', JSON.stringify(q));
+  } catch(_) {}
+}
+
+async function flushPendingQueue() {
+  let q;
+  try { q = JSON.parse(localStorage.getItem('lhz_pending_queue')||'[]'); } catch(_) { return; }
+  if (!q.length) return;
+  setSyncDot('saving');
+  const failed = [];
+  for (const item of q) {
+    try {
+      const { error } = await sb.from('ht_store').upsert({ key: item.key, value: item.value, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+      if (error) throw error;
+      _cache[item.key] = item.value;
+    } catch(_) { failed.push(item); }
+  }
+  try { localStorage.setItem('lhz_pending_queue', JSON.stringify(failed)); } catch(_) {}
+  setSyncDot(failed.length ? 'err' : 'ok');
+  if (!failed.length && q.length) toast('✅ Saqlangan ma\'lumotlar yuborildi');
+}
+
+window.addEventListener('online', ()=>{ if(sb) flushPendingQueue(); });
 async function dbGetSafe(key) {
   const v = await dbGet(key);
   if (v !== null) return v;
@@ -2006,8 +2045,8 @@ async function boot() {
         document.getElementById('topBar').style.display='';
         renderUserInfo(user); setSyncDot('ok');
         renderBugun();
-        // Schedule today's prayer notifications regardless of which page is open
         fetchPrayerTimes(todayStr()).then(t=>{ if(t) schedulePrayerNotifs(t); }).catch(()=>{});
+        if (navigator.onLine) flushPendingQueue();
       } else if(event==='SIGNED_OUT'){
         showLoginScreen(); document.getElementById('loadingScreen').style.display='none';
       }
