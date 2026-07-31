@@ -387,10 +387,5 @@ DU = ['Yakshanba','Dushanba',...,'Shanba']
 
 | # | Issue | Notes |
 |---|---|---|
-| 1 | **Tarix performance** | `getDayScore` fires individual Supabase reads for each day in the calendar grid. Month view = up to 31 reads. Should batch or pre-cache. |
-| 2 | **Notification delivery** | `notif_prefs` is stored per prayer but actual `setTimeout`/push reminders are not wired. Aladhan times are fetched; just need the scheduler. |
-| 3 | **Offline write queue** | `dbSet` fails silently when offline. Needs a queue that retries when connectivity returns. |
-| 4 | **Moliya — no charts** | No monthly breakdown or category chart. Currently a flat transaction list only. |
-| 5 | **Ilm — basic UI** | Goals/sessions have no progress percentage visualization or completion graph. |
-| 6 | **Hisobot — read-only charts** | Mood/sleep bars are rendered from stored data; no direct input on this page (input is on Sog'liq). |
-| 7 | **Schedule override editor styling** | The override editor inline in Bugun is functional but doesn't fully match the Sozlamalar editor style. |
+| 1 | **Notification delivery** | Scheduled at boot via `fetchPrayerTimes` + `schedulePrayerNotifs`. **Qisman hal qilindi** — faqat browser tab ochiq turganda ishlaydi. Haqiqiy background push uchun Service Worker Push API + backend server kerak (loyiha ko'lamidan tashqarida). |
+| 2 | **Hisobot — read-only charts** | Mood/sleep bars are rendered from stored data; no direct input on this page (input is on Sog'liq). |
