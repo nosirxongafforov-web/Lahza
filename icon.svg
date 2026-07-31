@@ -1,9 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
   <rect width="192" height="192" rx="40" fill="#0f0f0f"/>
-  <!--
-    Crescent path: intersection of outer circle (cx=96,cy=96,r=58)
-    and shadow circle (cx=74,cy=96,r=52) is at (70, 44) and (70, 148).
-    Outer arc goes clockwise (right side), inner arc goes counter-clockwise.
-  -->
-  <path d="M 70 44 A 58 58 0 1 1 70 148 A 52 52 0 1 0 70 44 Z" fill="#E8E6E0"/>
+  <path d="M 70 44 A 58 58 0 1 1 70 148 A 52 52 0 1 0 70 44 Z"
+        fill="#E8E6E0"
+        transform="rotate(28, 96, 96)"/>
 </svg>
