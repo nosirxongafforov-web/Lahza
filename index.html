@@ -79,7 +79,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .sb-nav{padding:8px 0;flex:1;}
 .sn{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;color:var(--text2);font-size:13px;padding:11px 16px;cursor:pointer;text-align:left;transition:all .15s;border-left:3px solid transparent;}
 .sn:hover{background:var(--bg3);color:var(--text);}
-.sn.active{color:var(--gold2);background:var(--gold-bg);border-left-color:var(--gold);}
+.sn.active{color:#E8E6E0;background:rgba(255,255,255,0.05);border-left-color:var(--gold);}
 .sn-icon{font-size:17px;width:24px;text-align:center;flex-shrink:0;}
 .top-brand{background:none;border:1px solid rgba(255,255,255,0.12);color:#E8E6E0;font-size:14px;font-weight:700;letter-spacing:.05em;cursor:pointer;padding:6px 10px;border-radius:8px;transition:all .15s;}
 .top-brand:hover{background:var(--bg3);border-color:var(--gold);}
@@ -108,7 +108,8 @@ body.light .user-menu{box-shadow:0 8px 24px rgba(0,0,0,.15);}
 .dnb{background:var(--bg3);border:1px solid var(--border);border-radius:var(--rx);color:var(--text2);width:30px;height:30px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s;}
 .dnb:hover{border-color:var(--border2);color:var(--text);}
 .dlbl{font-size:11px;color:var(--text2);min-width:76px;text-align:center;}
-.tbtn{background:var(--gold-bg);border:1px solid var(--gold);border-radius:var(--rx);color:var(--gold2);font-size:10px;padding:4px 10px;cursor:pointer;white-space:nowrap;}
+.tbtn{background:transparent;border:1px solid var(--border2);border-radius:var(--rx);color:var(--text2);font-size:10px;padding:4px 10px;cursor:pointer;white-space:nowrap;transition:all .15s;}
+.tbtn:hover{border-color:var(--text2);color:var(--text);}
 
 /* CARDS */
 .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:14px;margin-bottom:10px;}
@@ -196,7 +197,7 @@ label{font-size:11px;color:var(--text2);display:block;margin-bottom:4px;font-wei
 /* WEEK GRID */
 .wg{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;text-align:center;}
 .wd{background:var(--bg3);border-radius:var(--rs);padding:7px 2px;}
-.wd.today-col{border:1px solid var(--gold);}
+.wd.today-col{border:1px solid var(--border2);}
 .wdn{font-size:8px;color:var(--text3);margin-bottom:4px;text-transform:uppercase;}
 .ws{font-size:15px;font-weight:700;}
 .s0{color:var(--text3);}.slow{color:var(--red);}.smid{color:var(--orange);}.shigh{color:var(--green);}
@@ -204,10 +205,10 @@ label{font-size:11px;color:var(--text2);display:block;margin-bottom:4px;font-wei
 /* SCHEDULE */
 .slist{display:flex;flex-direction:column;gap:4px;}
 .srow{display:flex;gap:9px;align-items:flex-start;padding:7px 9px;background:var(--bg3);border-radius:var(--rs);border-left:3px solid transparent;}
-.srow.cur{border-left-color:var(--gold);background:rgba(201,168,76,.07);}
+.srow.cur{border-left-color:var(--text2);background:rgba(255,255,255,.04);}
 .stime{font-size:10px;color:var(--text3);width:76px;flex-shrink:0;padding-top:1px;}
 .slbl{font-size:12px;color:var(--text);}
-.srow.cur .slbl{color:var(--gold2);}
+.srow.cur .slbl{color:var(--text);}
 
 /* BADGES */
 .badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 6px;border-radius:99px;}
@@ -266,18 +267,77 @@ tr:hover td{background:var(--bg3);}
 .ei select{background:var(--bg4);border:1px solid var(--border);border-radius:var(--rx);padding:3px 5px;font-size:11px;width:65px;flex-shrink:0;color:var(--text);}
 
 /* MISC */
-#toast{position:fixed;bottom:calc(var(--nb) + 10px);left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:8px 16px;font-size:12px;z-index:999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:8px 16px;font-size:12px;z-index:999;opacity:0;transition:opacity .2s;pointer-events:none;white-space:nowrap;}
 #toast.show{opacity:1;}
 .empty{text-align:center;padding:24px;color:var(--text3);font-size:12px;}
 hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
 .sec-lbl{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:14px 0 7px;}
-.countdown-box{background:var(--gold-bg);border:1px solid var(--gold);border-radius:var(--rs);padding:10px 14px;text-align:center;margin-bottom:10px;}
-.countdown-label{font-size:10px;color:var(--gold);text-transform:uppercase;letter-spacing:.06em;}
-.countdown-time{font-size:24px;font-weight:700;color:var(--gold2);letter-spacing:.04em;}
+.countdown-box{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:10px 14px;text-align:center;margin-bottom:10px;}
+.countdown-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
+.countdown-time{font-size:24px;font-weight:700;color:var(--text);letter-spacing:.04em;}
 .countdown-name{font-size:12px;color:var(--text2);margin-top:2px;}
 ::-webkit-scrollbar{width:3px;height:3px;}
 ::-webkit-scrollbar-track{background:transparent;}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px;}
+/* REJA BANNER */
+.reja-banner{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--rs);padding:7px 12px;font-size:11px;color:var(--text3);margin-bottom:10px;text-align:center;letter-spacing:.03em;}
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;gap:8px;margin-bottom:12px;}
+.cal-nav-title{font-size:14px;font-weight:600;flex:1;text-align:center;}
+.cal-view-toggle{display:flex;gap:5px;margin-bottom:10px;}
+.cal-view-btn{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:var(--rx);color:var(--text2);font-size:11px;padding:5px;cursor:pointer;transition:all .15s;}
+.cal-view-btn.active{background:var(--bg4);border-color:var(--border2);color:var(--text);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-head{font-size:9px;color:var(--text3);text-align:center;padding:3px 0;text-transform:uppercase;font-weight:600;}
+.cal-cell{background:var(--bg3);border-radius:var(--rx);padding:6px 4px;text-align:center;cursor:pointer;min-height:42px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;transition:background .15s;border:1px solid transparent;}
+.cal-cell:hover{background:var(--bg4);}
+.cal-cell.empty{background:transparent;border:none;cursor:default;pointer-events:none;}
+.cal-cell.cal-today{border-color:var(--border2);}
+.cal-cell.cal-future{opacity:.35;pointer-events:none;}
+.cal-day-num{font-size:11px;color:var(--text2);}
+.cal-today .cal-day-num{color:var(--text);font-weight:600;}
+.cal-dot{width:6px;height:6px;border-radius:50%;display:block;margin-top:2px;}
+.dot-g{background:var(--green);}
+.dot-y{background:var(--gold);}
+.dot-r{background:var(--red);}
+.dot-none{background:transparent;}
+/* YEAR VIEW */
+.yr-wrap{overflow-x:auto;padding-bottom:4px;}
+.yr-months-row{display:flex;gap:2px;margin-bottom:2px;padding-left:14px;}
+.yr-month-lbl{font-size:8px;color:var(--text3);}
+.yr-grid{display:flex;gap:2px;}
+.yr-col{display:flex;flex-direction:column;gap:2px;}
+.yr-cell{width:10px;height:10px;border-radius:2px;cursor:pointer;flex-shrink:0;}
+.yr-cell:hover{opacity:.7;}
+.yr-c0{background:var(--bg4);}
+.yr-c1{background:rgba(76,175,120,.25);}
+.yr-c2{background:rgba(76,175,120,.5);}
+.yr-c3{background:rgba(76,175,120,.75);}
+.yr-c4{background:var(--green);}
+.yr-day-labels{display:flex;flex-direction:column;gap:2px;margin-right:2px;}
+.yr-day-lbl{font-size:8px;color:var(--text3);width:12px;height:10px;display:flex;align-items:center;}
+/* DAY POPUP */
+#dayPopup{position:fixed;inset:0;z-index:500;display:none;align-items:center;justify-content:center;padding:16px;}
+#dayPopup.open{display:flex;}
+.dpop-overlay{position:absolute;inset:0;background:rgba(0,0,0,.6);}
+.dpop-box{position:relative;background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r);padding:18px;width:100%;max-width:340px;z-index:1;box-shadow:0 12px 40px rgba(0,0,0,.5);}
+.dpop-title{font-size:13px;font-weight:600;margin-bottom:10px;}
+.dpop-close{position:absolute;top:12px;right:12px;background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;line-height:1;}
+.dpop-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border);}
+.dpop-row:last-child{border-bottom:none;}
+.dpop-lbl{color:var(--text3);}
+.dpop-val{color:var(--text);font-weight:500;}
+/* TARIX STATS */
+.cal-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;}
+@media(max-width:440px){.cal-stats{grid-template-columns:repeat(2,1fr);}}
+.cal-stat-item{background:var(--bg3);border-radius:var(--rs);padding:10px;text-align:center;}
+.csv{font-size:18px;font-weight:700;color:var(--text);}
+.csl{font-size:10px;color:var(--text3);margin-top:2px;}
+.dpop-section{margin-bottom:10px;}
+.dpop-sh{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.dpop-row{display:flex;align-items:center;gap:6px;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border);color:var(--text2);}
+.dpop-row:last-child{border-bottom:none;}
+.dpop-row.done{color:var(--text);}
 </style>
 </head>
 <body>
@@ -310,11 +370,11 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <button class="top-brand" onclick="openSidebar()">☾ Lahza</button>
     <div class="top-right">
       <div class="top-date" id="topDate"></div>
-      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Yorug'/Qorong'u">◐</button>
       <div class="sync-dot ok" id="syncDot"></div>
       <button class="user-btn" onclick="toggleUserMenu()" id="userBtn"></button>
       <div class="user-menu" id="userMenu">
         <div class="umname" id="umName"></div>
+        <button class="umbtn" id="themeMenuBtn" onclick="toggleTheme()">◐ <span id="themeMenuLbl">Kunduzgi rejim</span></button>
         <button class="umbtn" onclick="signOut()">🚪 Chiqish</button>
       </div>
     </div>
@@ -338,6 +398,7 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <button class="sn" data-page="muhasaba" onclick="showPage('muhasaba',event)"><span class="sn-icon">📝</span>Hisobot</button>
     <button class="sn" data-page="soglik" onclick="showPage('soglik',event)"><span class="sn-icon">🌙</span>Sog'liq</button>
     <button class="sn" data-page="reja" onclick="showPage('reja',event)"><span class="sn-icon">🎯</span>Reja</button>
+    <button class="sn" data-page="tarix" onclick="showPage('tarix',event)"><span class="sn-icon">📅</span>Tarix</button>
     <button class="sn" data-page="sozlamalar" onclick="showPage('sozlamalar',event)"><span class="sn-icon">⚙</span>Sozlamalar</button>
   </div>
 </nav>
@@ -356,11 +417,19 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     </div>
   </div>
   <div class="g3" style="margin-bottom:10px">
-    <div class="metric"><div class="mv" id="bOv" style="color:var(--gold2)">—</div><div class="ml">Umumiy</div></div>
-    <div class="metric"><div class="mv" id="bHab" style="color:var(--green)">—</div><div class="ml">Odatlar</div></div>
-    <div class="metric"><div class="mv" id="bNam" style="color:var(--blue)">—</div><div class="ml">Namoz</div></div>
+    <div class="metric"><div class="mv" id="bOv">—</div><div class="ml">Umumiy</div></div>
+    <div class="metric"><div class="mv" id="bHab">—</div><div class="ml">Odatlar</div></div>
+    <div class="metric"><div class="mv" id="bNam">—</div><div class="ml">Namoz</div></div>
   </div>
-  <div class="card"><div class="ctitle">🕐 Kunlik jadval</div><div class="slist" id="schedList"></div></div>
+  <div id="rejaBanner" style="display:none" class="reja-banner">📅 Ertangi kun rejalari — odat va namoz kuzatuvi faqat bugun ishlaydi</div>
+  <div class="card">
+    <div class="ctitle" style="display:flex;justify-content:space-between;align-items:center">
+      <span>🕐 Kunlik jadval</span>
+      <button class="bout bsm" id="schedOverrideBtn" onclick="toggleSchedOverride()" style="font-size:10px;padding:3px 8px">✏ Bugunni tahrirlash</button>
+    </div>
+    <div class="slist" id="schedList"></div>
+    <div id="schedOverrideEdit" style="display:none"></div>
+  </div>
   <div class="card"><div class="ctitle">✅ Odatlar</div><div class="hlist" id="habitList"></div></div>
   <div class="card">
     <div class="ctitle">🎯 Bugungi 3 vazifa</div>
@@ -598,6 +667,37 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
   </div>
 </div>
 
+<!-- PAGE: TARIX -->
+<div class="page" id="page-tarix">
+  <div class="ph"><div><div class="pt">Tarix</div><div class="ps">Kunlik natijalar va statistika</div></div></div>
+  <div class="card">
+    <div class="cal-view-toggle">
+      <button class="cal-view-btn active" id="vbtnMonth" onclick="setTarixView('month')">Oy ko'rinishi</button>
+      <button class="cal-view-btn" id="vbtnYear" onclick="setTarixView('year')">Yil ko'rinishi</button>
+    </div>
+    <div class="cal-nav">
+      <button class="dnb" onclick="tarixShift(-1)">‹</button>
+      <div class="cal-nav-title" id="tarixNavTitle"></div>
+      <button class="dnb" onclick="tarixShift(1)">›</button>
+    </div>
+    <div id="tarixCal"></div>
+  </div>
+  <div class="card">
+    <div class="ctitle">📊 Statistika</div>
+    <div class="cal-stats" id="tarixStats"></div>
+  </div>
+</div>
+
+<!-- DAY POPUP -->
+<div id="dayPopup">
+  <div class="dpop-overlay" onclick="closeDayPopup()"></div>
+  <div class="dpop-box">
+    <button class="dpop-close" onclick="closeDayPopup()">✕</button>
+    <div class="dpop-title" id="dpopTitle"></div>
+    <div id="dpopContent"></div>
+  </div>
+</div>
+
 <!-- PAGE: SOZLAMALAR -->
 <div class="page" id="page-sozlamalar">
   <div class="ph"><div><div class="pt">Sozlamalar</div><div class="ps">Jadval va odatlarni moslang</div></div></div>
@@ -682,7 +782,9 @@ function shiftDate(d) {
   const dt = new Date(activeDate + 'T12:00:00');
   dt.setDate(dt.getDate() + d);
   const nd = localDateStr(dt);
-  if (nd > todayStr()) return;
+  // Allow up to tomorrow for planning
+  const tomorrow = localDateStr(new Date(new Date().getTime() + 86400000));
+  if (nd > tomorrow) return;
   activeDate = nd;
   refreshPage();
 }
@@ -735,6 +837,7 @@ function renderPage(id) {
   else if(id==='muhasaba') renderMuhasaba();
   else if(id==='soglik') renderSoglik();
   else if(id==='reja') renderReja();
+  else if(id==='tarix') renderTarix();
   else if(id==='sozlamalar') renderSozlamalar();
 }
 
@@ -837,40 +940,51 @@ async function schedulePrayerNotifs(timings) {
 async function renderBugun() {
   updateDateLabels();
   const isT = isToday(activeDate);
-  const [sched, habits, hs, prayers, daydata, timings] = await Promise.all([
+  const tomorrow = localDateStr(new Date(new Date().getTime() + 86400000));
+  const isFuture = activeDate > todayStr();
+
+  // Reja banner
+  const rejaBanner = document.getElementById('rejaBanner');
+  if (rejaBanner) rejaBanner.style.display = isFuture ? 'block' : 'none';
+
+  // Override edit button only visible for today
+  const overrideBtn = document.getElementById('schedOverrideBtn');
+  if (overrideBtn) overrideBtn.style.display = isT ? 'inline-flex' : 'none';
+
+  const [baseSched, habits, hs, prayers, daydata, timings, override] = await Promise.all([
     getSched(), getHabits(),
     dbGetSafe('hstate_'+activeDate),
     dbGetSafe('prayers_'+activeDate),
     dbGetSafe('daydata_'+activeDate),
     fetchPrayerTimes(activeDate),
+    isT ? dbGetSafe('schedule_override_'+activeDate) : Promise.resolve(null),
   ]);
+  const sched = override || baseSched;
   const hstate = hs||{}, pr = prayers||{}, dd = daydata||{};
 
-  // Schedule — annotate the block containing Asr time
+  // Schedule — Asr annotation as plain dim text
   const asrStr = timings?.Asr ? timings.Asr.slice(0,5) : null;
   const asrMin = asrStr ? parseInt(asrStr)*60 + parseInt(asrStr.slice(3)) : -1;
-  function blockContainsAsr(timeRange) {
+  function blockContainsAsr(tr) {
     if (asrMin < 0) return false;
-    const m = timeRange.match(/^(\d+):(\d+)/);
-    const m2 = timeRange.match(/–(\d+):(\d+)/);
+    const m = tr.match(/^(\d+):(\d+)/), m2 = tr.match(/[–-](\d+):(\d+)/);
     if (!m || !m2) return false;
-    const start = parseInt(m[1])*60+parseInt(m[2]);
-    const end = parseInt(m2[1])*60+parseInt(m2[2]);
-    return asrMin >= start && asrMin < end;
+    return asrMin >= parseInt(m[1])*60+parseInt(m[2]) && asrMin < parseInt(m2[1])*60+parseInt(m2[2]);
   }
   const cur = isT ? getCurBlock(sched) : -1;
   document.getElementById('schedList').innerHTML = sched.map((s,i) => {
-    const asrNote = blockContainsAsr(s.time) ? ` <span style="font-size:10px;color:var(--blue);margin-left:4px">🕌 Asr ${asrStr}</span>` : '';
+    const asrNote = blockContainsAsr(s.time) ? ` <span style="color:var(--text3)"> · Asr ${asrStr}</span>` : '';
     return `<div class="srow ${i===cur?'cur':''}">
       <div class="stime">${s.time}</div>
-      <div class="slbl">${s.label}${i===cur?' <span style="font-size:10px;color:var(--gold)">← hozir</span>':''}${asrNote}</div>
+      <div class="slbl">${s.label}${i===cur?' <span style="font-size:10px;color:var(--text3)"> ← hozir</span>':''}${asrNote}</div>
     </div>`;
   }).join('');
 
-  // Habits
+  // Habits — disable for future
+  const habitsInteractive = isT;
   const doneCnt = habits.filter(h => hstate[h.id]).length;
   document.getElementById('habitList').innerHTML = habits.map(h =>
-    `<div class="hrow ${hstate[h.id]?'done':''}" ${isT?`onclick="toggleHabit('${h.id}')"`:''} style="${!isT?'cursor:default':''}">
+    `<div class="hrow ${hstate[h.id]?'done':''}" ${habitsInteractive?`onclick="toggleHabit('${h.id}')"`:''} style="${!habitsInteractive?'cursor:default':''}">
       <div class="hck">${hstate[h.id]?'✓':''}</div>
       <div class="hlbl">${h.label}</div>
       <span class="htag t${h.tag}">${h.tag==='deen'?'ruh':h.tag}</span>
@@ -878,26 +992,79 @@ async function renderBugun() {
 
   // Tasks
   const tasks = dd.tasks || [{t:'',done:false},{t:'',done:false},{t:'',done:false}];
+  const tasksInteractive = isT || isFuture; // allow task planning for tomorrow
   document.getElementById('taskRows').innerHTML = [0,1,2].map(i =>
     `<div class="trow">
-      <div class="tck ${tasks[i]?.done?'done':''}" onclick="toggleTask(${i})">${tasks[i]?.done?'✓':''}</div>
+      <div class="tck ${tasks[i]?.done?'done':''}" ${tasksInteractive?`onclick="toggleTask(${i})"`:''} style="${!tasksInteractive?'pointer-events:none':''}">${tasks[i]?.done?'✓':''}</div>
       <input class="tinp ${tasks[i]?.done?'striked':''}" id="task${i}" value="${(tasks[i]?.t||'').replace(/"/g,'&quot;')}"
-        placeholder="Vazifa ${i+1}..." ${!isT?'disabled':''} onchange="updateTaskText(${i},this.value)">
+        placeholder="Vazifa ${i+1}..." ${!tasksInteractive?'disabled':''} onchange="updateTaskText(${i},this.value)">
     </div>`).join('');
   window._tasks = tasks.map(t => ({...t}));
 
   // Day note
   document.getElementById('dayNote').value = dd.note||'';
-  document.getElementById('dayNote').disabled = !isT;
+  document.getElementById('dayNote').disabled = !tasksInteractive;
 
   // Metrics
   const pDone = PRAYERS_ALL.filter(p => pr[p]==='vaqtida'||pr[p]==='qazo').length;
   const taskDone = tasks.filter(t=>t.done).length;
   const ov = habits.length ? Math.round((doneCnt/habits.length)*40 + (pDone/5)*40 + (taskDone/3)*20) : 0;
   document.getElementById('bOv').textContent = ov+'%';
-  document.getElementById('bHab').textContent = doneCnt+'/'+habits.length;
-  document.getElementById('bNam').textContent = pDone+'/5';
+  document.getElementById('bHab').textContent = isFuture ? '—' : doneCnt+'/'+habits.length;
+  document.getElementById('bNam').textContent = isFuture ? '—' : pDone+'/5';
   document.getElementById('todaySub').textContent = fmtF(activeDate);
+}
+
+// ─── SCHEDULE OVERRIDE ────────────────────────────────────────────
+let _overrideData = null;
+let _overrideOpen = false;
+async function toggleSchedOverride() {
+  if (!isToday(activeDate)) return;
+  _overrideOpen = !_overrideOpen;
+  const editDiv = document.getElementById('schedOverrideEdit');
+  const btn = document.getElementById('schedOverrideBtn');
+  if (!_overrideOpen) { editDiv.style.display='none'; btn.textContent='✏ Bugunni tahrirlash'; return; }
+  btn.textContent='✕ Yopish';
+  editDiv.style.display='block';
+  const existing = await dbGetSafe('schedule_override_'+activeDate);
+  _overrideData = existing ? JSON.parse(JSON.stringify(existing)) : JSON.parse(JSON.stringify(await getSched()));
+  renderOverrideEdit();
+}
+function renderOverrideEdit() {
+  const editDiv = document.getElementById('schedOverrideEdit');
+  editDiv.innerHTML = `<div style="font-size:10px;color:var(--text3);margin:8px 0 6px">Faqat bugun uchun — ertaga asosiy jadval qaytadi</div>`+
+    _overrideData.map((s,i)=>`
+    <div class="ei">
+      <input value="${s.time}" placeholder="Vaqt" style="width:80px;flex:none" oninput="fmtOvTime(this,${i})">
+      <input value="${s.label}" placeholder="Faoliyat" oninput="_overrideData[${i}].label=this.value">
+      <button class="bdel" onclick="_overrideData.splice(${i},1);renderOverrideEdit()">✕</button>
+    </div>`).join('')+
+    `<div style="display:flex;gap:7px;margin-top:8px">
+      <button class="bout bsm" onclick="_overrideData.push({time:'00:00',label:'Yangi blok',tag:'aql'});renderOverrideEdit()">+ Qo'shish</button>
+      <button class="btn bsm" onclick="saveSchedOverride()">Saqlash</button>
+      <button class="bout bsm" style="color:var(--red)" onclick="clearSchedOverride()">Asosiyga qayt</button>
+    </div>`;
+}
+function fmtOvTime(el, i) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length > 2) { el.value = v.slice(0,2)+':'+v.slice(2,4); v = el.value; }
+  _overrideData[i].time = el.value;
+}
+async function saveSchedOverride() {
+  await dbSet('schedule_override_'+activeDate, _overrideData);
+  _overrideOpen = false;
+  document.getElementById('schedOverrideEdit').style.display='none';
+  document.getElementById('schedOverrideBtn').textContent='✏ Bugunni tahrirlash';
+  toast('✅ Bugungi jadval saqlandi');
+  renderBugun();
+}
+async function clearSchedOverride() {
+  await dbSet('schedule_override_'+activeDate, null);
+  _overrideOpen = false;
+  document.getElementById('schedOverrideEdit').style.display='none';
+  document.getElementById('schedOverrideBtn').textContent='✏ Bugunni tahrirlash';
+  toast('✅ Asosiy jadvalga qaytildi');
+  renderBugun();
 }
 
 function getCurBlock(sched) {
@@ -1366,13 +1533,192 @@ async function delGoal(id) { const g=(await dbGetSafe('goals')||[]).filter(g=>g.
 async function saveWeeklyPlan() { await dbSet('weekly_plan_'+getWeekStart(),document.getElementById('weeklyPlan').value); toast('✅ Saqlandi'); }
 async function saveTomorrowPlan() { await dbSet('tomorrow_plan_'+todayStr(),document.getElementById('tomorrowPlan').value); toast('✅ Saqlandi'); }
 
+// ─── TARIX ────────────────────────────────────────────────────────
+let tarixView = 'month';
+let tarixMonth = new Date().getMonth();
+let tarixYear = new Date().getFullYear();
+
+function setTarixView(v) {
+  tarixView = v;
+  document.getElementById('vbtnMonth').classList.toggle('active', v==='month');
+  document.getElementById('vbtnYear').classList.toggle('active', v==='year');
+  renderTarix();
+}
+
+function tarixShift(d) {
+  if (tarixView === 'month') {
+    tarixMonth += d;
+    if (tarixMonth > 11) { tarixMonth=0; tarixYear++; }
+    if (tarixMonth < 0) { tarixMonth=11; tarixYear--; }
+  } else {
+    tarixYear += d;
+  }
+  renderTarix();
+}
+
+async function renderTarix() {
+  const nav = document.getElementById('tarixNavTitle');
+  const cal = document.getElementById('tarixCal');
+  if (!nav||!cal) return;
+  if (tarixView === 'month') {
+    nav.textContent = MN[tarixMonth] + ' ' + tarixYear;
+    await renderTarixMonth(cal);
+  } else {
+    nav.textContent = tarixYear + ' yil';
+    await renderTarixYear(cal);
+  }
+  await renderTarixStats();
+}
+
+async function getDayScore(dateStr) {
+  const [hs, prayers, daydata, habits] = await Promise.all([
+    dbGetSafe('hstate_'+dateStr),
+    dbGetSafe('prayers_'+dateStr),
+    dbGetSafe('daydata_'+dateStr),
+    getHabits(),
+  ]);
+  const hstate=hs||{}, pr=prayers||{}, dd=daydata||{};
+  const habDone = habits.filter(h=>hstate[h.id]).length;
+  const pDone = PRAYERS_ALL.filter(p=>pr[p]==='vaqtida'||pr[p]==='qazo').length;
+  const tasks = dd.tasks||[];
+  const taskDone = tasks.filter(t=>t.done).length;
+  const taskTotal = tasks.filter(t=>t.t&&t.t.trim()).length;
+  if (!habDone && !pDone && !taskDone) return null;
+  const habScore = habits.length ? habDone/habits.length : 0;
+  const pScore = pDone/5;
+  const tScore = taskTotal ? taskDone/taskTotal : 0;
+  return Math.round((habScore*40 + pScore*40 + tScore*20));
+}
+
+function scoreToColor(score) {
+  if (score === null) return 'var(--bg3)';
+  if (score >= 80) return 'var(--green)';
+  if (score >= 60) return '#8bc34a';
+  if (score >= 40) return '#ffc107';
+  if (score >= 20) return '#ff7043';
+  return 'var(--red)';
+}
+
+async function renderTarixMonth(container) {
+  const today = todayStr();
+  const firstDay = new Date(tarixYear, tarixMonth, 1).getDay();
+  const daysInMonth = new Date(tarixYear, tarixMonth+1, 0).getDate();
+  const offset = (firstDay+6)%7; // Monday-first
+
+  const dateStrs = [];
+  for (let d=1; d<=daysInMonth; d++) {
+    const ds = tarixYear+'-'+String(tarixMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    dateStrs.push(ds);
+  }
+  const scores = await Promise.all(dateStrs.map(ds => ds<=today ? getDayScore(ds) : Promise.resolve(null)));
+
+  let html = '<div class="cal-grid">';
+  ['Du','Se','Ch','Pa','Ju','Sh','Ya'].forEach(d=>{html+=`<div class="cal-cell" style="font-size:9px;color:var(--text3);padding:4px 0">${d}</div>`;});
+  for(let i=0;i<offset;i++) html+='<div class="cal-cell"></div>';
+  dateStrs.forEach((ds,i)=>{
+    const d=i+1, sc=scores[i];
+    const isToday=ds===today, isFuture=ds>today;
+    const dot=(!isFuture&&sc!==null)?`<div class="cal-dot" style="background:${scoreToColor(sc)}"></div>`:'';
+    html+=`<div class="cal-cell${isToday?' today':''}" onclick="${!isFuture?`showDayPopup('${ds}',${sc??'null'})`:''}">
+      <div style="${isToday?'font-weight:700;color:var(--gold)':isFuture?'color:var(--text3)':''}">${d}</div>${dot}
+    </div>`;
+  });
+  html+='</div>';
+  container.innerHTML=html;
+}
+
+async function renderTarixYear(container) {
+  const today = todayStr();
+  let html='<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">';
+  for(let m=0;m<12;m++){
+    const daysInMonth=new Date(tarixYear,m+1,0).getDate();
+    let monthScores=[], totalScore=0, counted=0;
+    for(let d=1;d<=daysInMonth;d++){
+      const ds=tarixYear+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      if(ds>today) break;
+      const sc=await getDayScore(ds);
+      monthScores.push(sc);
+      if(sc!==null){totalScore+=sc;counted++;}
+    }
+    const avg=counted?Math.round(totalScore/counted):null;
+    const colorClass=avg===null?0:avg>=80?4:avg>=60?3:avg>=40?2:avg>=20?1:0;
+    html+=`<div class="yr-cell yr-c${colorClass}" onclick="tarixView='month';tarixMonth=${m};setTarixView('month')">
+      <div style="font-size:9px;color:var(--text3)">${MN[m].slice(0,3)}</div>
+      <div style="font-size:11px;font-weight:600">${avg!==null?avg+'%':'—'}</div>
+    </div>`;
+  }
+  html+='</div>';
+  container.innerHTML=html;
+}
+
+async function renderTarixStats() {
+  const el=document.getElementById('tarixStats');
+  if(!el) return;
+  const today=todayStr();
+  let total=0, count=0, streak=0, maxStreak=0, cur=0;
+  const days=[];
+  if(tarixView==='month'){
+    const dim=new Date(tarixYear,tarixMonth+1,0).getDate();
+    for(let d=1;d<=dim;d++) days.push(tarixYear+'-'+String(tarixMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'));
+  } else {
+    for(let m=0;m<12;m++){const dim=new Date(tarixYear,m+1,0).getDate();for(let d=1;d<=dim;d++) days.push(tarixYear+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0'));}
+  }
+  for(const ds of days){
+    if(ds>today) break;
+    const sc=await getDayScore(ds);
+    if(sc!==null){total+=sc;count++;if(sc>=60){cur++;maxStreak=Math.max(maxStreak,cur);}else cur=0;}
+  }
+  const avg=count?Math.round(total/count):null;
+  el.innerHTML=`
+    <div class="cal-stat-item"><div class="csv">${count}</div><div class="csl">Faol kun</div></div>
+    <div class="cal-stat-item"><div class="csv">${avg!==null?avg+'%':'—'}</div><div class="csl">O'rtacha ball</div></div>
+    <div class="cal-stat-item"><div class="csv">${maxStreak}</div><div class="csl">Eng uzun seria</div></div>`;
+}
+
+async function showDayPopup(dateStr, score) {
+  const popup=document.getElementById('dayPopup');
+  const title=document.getElementById('dpopTitle');
+  const content=document.getElementById('dpopContent');
+  if(!popup) return;
+  title.textContent=fmtF(dateStr);
+  content.innerHTML='<div style="color:var(--text3);font-size:13px">Yuklanmoqda...</div>';
+  popup.classList.add('open');
+
+  const [hs, prayers, daydata, habits] = await Promise.all([
+    dbGetSafe('hstate_'+dateStr),
+    dbGetSafe('prayers_'+dateStr),
+    dbGetSafe('daydata_'+dateStr),
+    getHabits(),
+  ]);
+  const hstate=hs||{}, pr=prayers||{}, dd=daydata||{};
+  const habDone=habits.filter(h=>hstate[h.id]);
+  const pDone=PRAYERS_ALL.filter(p=>pr[p]==='vaqtida'||pr[p]==='qazo');
+  const tasks=(dd.tasks||[]).filter(t=>t.t&&t.t.trim());
+
+  const scoreBar=score!==null?`<div style="background:${scoreToColor(score)};color:#fff;border-radius:6px;padding:4px 10px;font-size:13px;font-weight:600;display:inline-block;margin-bottom:10px">${score}%</div>`:'';
+  content.innerHTML=scoreBar+
+    `<div class="dpop-section"><div class="dpop-sh">Odatlar (${habDone.length}/${habits.length})</div>`+
+    habits.map(h=>`<div class="dpop-row ${hstate[h.id]?'done':''}">${hstate[h.id]?'✓':'○'} ${h.label}</div>`).join('')+
+    `</div><div class="dpop-section"><div class="dpop-sh">Namoz (${pDone.length}/5)</div>`+
+    PRAYERS_ALL.map(p=>`<div class="dpop-row ${pr[p]?'done':''}">${pr[p]?'✓':'○'} ${p} ${pr[p]||''}</div>`).join('')+
+    (tasks.length?`</div><div class="dpop-section"><div class="dpop-sh">Vazifalar</div>`+
+    tasks.map(t=>`<div class="dpop-row ${t.done?'done':''}">${t.done?'✓':'○'} ${t.t}</div>`).join(''):'')+'</div>'+
+    (dd.note?`<div class="dpop-section"><div class="dpop-sh">Eslatma</div><div style="font-size:12px;color:var(--text2)">${dd.note}</div></div>`:'');
+}
+
+function closeDayPopup() {
+  const popup=document.getElementById('dayPopup');
+  if(popup) popup.classList.remove('open');
+}
+
 // ─── SOZLAMALAR ───────────────────────────────────────────────────
 const TAGS=['deen','jism','aql','pul','ijt'];
 async function renderSozlamalar() {
   const [sched,habits]=await Promise.all([getSched(),getHabits()]);
   document.getElementById('schedEdit').innerHTML=sched.map((s,i)=>`
     <div class="ei">
-      <input value="${s.time}" placeholder="Vaqt" style="width:80px;flex:none" oninput="schedData[${i}].time=this.value">
+      <input value="${s.time}" placeholder="HH:MM" style="width:80px;flex:none" maxlength="5"
+        oninput="fmtTimeInput(this,${i},'sched')" onblur="fmtTimeInput(this,${i},'sched')">
       <input value="${s.label}" placeholder="Faoliyat" oninput="schedData[${i}].label=this.value">
       <select onchange="schedData[${i}].tag=this.value">${TAGS.map(t=>`<option ${s.tag===t?'selected':''}>${t}</option>`).join('')}</select>
       <button class="bdel" onclick="schedData.splice(${i},1);renderSozlamalar()">✕</button>
@@ -1384,9 +1730,34 @@ async function renderSozlamalar() {
       <button class="bdel" onclick="habitsData.splice(${i},1);renderSozlamalar()">✕</button>
     </div>`).join('');
 }
-function addSchedRow(){schedData.push({time:'00:00',label:'Yangi faoliyat',tag:'aql'});renderSozlamalar();}
+function fmtTimeInput(el, i, src) {
+  let v = el.value.replace(/\D/g,'');
+  if (v.length >= 3) v = v.slice(0,2)+':'+v.slice(2,4);
+  el.value = v;
+  if (src==='sched') schedData[i].time = v;
+}
+function sortSched() {
+  schedData.sort((a,b)=>{
+    const toMin=t=>{const p=t.split(':');return p.length<2?9999:parseInt(p[0])*60+parseInt(p[1]);};
+    return toMin(a.time)-toMin(b.time);
+  });
+}
+function addSchedRow(){
+  schedData.push({time:'00:00',label:'Yangi faoliyat',tag:'aql'});
+  sortSched();
+  renderSozlamalar();
+}
 function addHabitRow(){habitsData.push({id:'h'+Date.now(),label:'Yangi odat',tag:'aql'});renderSozlamalar();}
-async function saveSchedule(){await dbSet('schedule',schedData);toast('✅ Jadval saqlandi');}
+async function saveSchedule(){
+  const timeRx=/^\d{1,2}:\d{2}$/;
+  const bad=schedData.filter(s=>!timeRx.test(s.time)||!s.label.trim());
+  if(bad.length){toast('❌ Barcha vaqt va nom to\'ldirilishi kerak');return;}
+  sortSched();
+  await dbSet('schedule',schedData);
+  schedData=null;
+  toast('✅ Jadval saqlandi');
+  renderSozlamalar();
+}
 async function saveHabits(){await dbSet('habits_config',habitsData);habitsData=null;await getHabits();toast('✅ Odatlar saqlandi');}
 async function requestNotifPerm(){
   if(!('Notification' in window)){toast('❌ Bildirishnoma qo\'llab-quvvatlanmaydi');return;}
@@ -1416,9 +1787,16 @@ function toggleUserMenu() { document.getElementById('userMenu').classList.toggle
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light');
   localStorage.setItem('lahza_theme', isLight ? 'light' : 'dark');
+  const lbl = document.getElementById('themeMenuLbl');
+  if (lbl) lbl.textContent = isLight ? 'Tungi rejim' : 'Kunduzgi rejim';
 }
 (function initTheme() {
-  if (localStorage.getItem('lahza_theme') === 'light') document.body.classList.add('light');
+  const isLight = localStorage.getItem('lahza_theme') === 'light';
+  if (isLight) document.body.classList.add('light');
+  window.addEventListener('DOMContentLoaded', () => {
+    const lbl = document.getElementById('themeMenuLbl');
+    if (lbl) lbl.textContent = isLight ? 'Tungi rejim' : 'Kunduzgi rejim';
+  });
 })();
 document.addEventListener('click',function(e){
   const m=document.getElementById('userMenu'),b=document.getElementById('userBtn');
