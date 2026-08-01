@@ -95,7 +95,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .sn{display:flex;align-items:center;gap:12px;width:100%;background:none;border:none;color:var(--text2);font-size:13px;padding:11px 16px;cursor:pointer;text-align:left;transition:all .15s;border-left:3px solid transparent;}
 .sn:hover{background:var(--bg3);color:var(--text);}
 .sn.active{color:#E8E6E0;background:rgba(255,255,255,0.05);border-left-color:var(--gold);}
-.sn-icon{font-size:17px;width:24px;text-align:center;flex-shrink:0;}
+.sn-icon{width:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .top-brand{background:none;border:1px solid rgba(255,255,255,0.12);color:#E8E6E0;font-size:14px;font-weight:700;letter-spacing:.05em;cursor:pointer;padding:6px 10px;border-radius:8px;transition:all .15s;}
 .top-brand:hover{background:var(--bg3);border-color:var(--gold);}
 .theme-btn{background:none;border:none;color:var(--text2);font-size:16px;cursor:pointer;padding:4px 6px;border-radius:var(--rx);line-height:1;transition:color .15s;}
@@ -488,15 +488,15 @@ hr{border:none;border-top:1px solid var(--border);margin:12px 0;}
     <button class="sb-close" onclick="closeSidebar()">✕</button>
   </div>
   <div class="sb-nav">
-    <button class="sn active" data-page="bugun" onclick="showPage('bugun',event)"><span class="sn-icon">🏠</span>Bugun</button>
-    <button class="sn" data-page="namoz" onclick="showPage('namoz',event)"><span class="sn-icon">🕌</span>Namoz</button>
-    <button class="sn" data-page="ilm" onclick="showPage('ilm',event)"><span class="sn-icon">📚</span>Ilm</button>
-    <button class="sn" data-page="moliya" onclick="showPage('moliya',event)"><span class="sn-icon">💰</span>Moliya</button>
-    <button class="sn" data-page="muhasaba" onclick="showPage('muhasaba',event)"><span class="sn-icon">📝</span>Hisobot</button>
-    <button class="sn" data-page="soglik" onclick="showPage('soglik',event)"><span class="sn-icon">🌙</span>Sog'liq</button>
-    <button class="sn" data-page="reja" onclick="showPage('reja',event)"><span class="sn-icon">🎯</span>Reja</button>
-    <button class="sn" data-page="tarix" onclick="showPage('tarix',event)"><span class="sn-icon">📅</span>Tarix</button>
-    <button class="sn" data-page="sozlamalar" onclick="showPage('sozlamalar',event)"><span class="sn-icon">⚙</span>Sozlamalar</button>
+    <button class="sn active" data-page="bugun" onclick="showPage('bugun',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></span>Bugun</button>
+    <button class="sn" data-page="namoz" onclick="showPage('namoz',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span>Namoz</button>
+    <button class="sn" data-page="ilm" onclick="showPage('ilm',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>Ilm</button>
+    <button class="sn" data-page="moliya" onclick="showPage('moliya',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h5v4h-5a2 2 0 0 1 0-4z"/></svg></span>Moliya</button>
+    <button class="sn" data-page="muhasaba" onclick="showPage('muhasaba',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span>Hisobot</button>
+    <button class="sn" data-page="soglik" onclick="showPage('soglik',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>Sog'liq</button>
+    <button class="sn" data-page="reja" onclick="showPage('reja',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>Reja</button>
+    <button class="sn" data-page="tarix" onclick="showPage('tarix',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Tarix</button>
+    <button class="sn" data-page="sozlamalar" onclick="showPage('sozlamalar',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Sozlamalar</button>
   </div>
 </nav>
 
