@@ -187,7 +187,8 @@ body.light .dp-cell:hover{background:var(--bg4);}
 
 /* PAGES */
 .page{display:none;max-width:900px;margin:0 auto;padding:16px 14px 30px;}
-.page.active{display:block;}
+.page.active{display:block;animation:pgFadeIn .15s ease;}
+@keyframes pgFadeIn{from{opacity:0}to{opacity:1}}
 .ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:10px;flex-wrap:wrap;}
 .pt{font-size:18px;font-weight:600;}
 .ps{font-size:11px;color:var(--text3);margin-top:2px;}
@@ -944,6 +945,8 @@ function getWeekStart() { const d=new Date(); d.setDate(d.getDate()-d.getDay()+1
 function updateDateLabels() {
   const lbl = isToday(activeDate) ? 'Bugun' : fmtS(activeDate);
   ['bugunLbl','namozLbl','muhasabaLbl','soglikLbl'].forEach(id => { const el=document.getElementById(id); if(el) el.textContent=lbl; });
+  const onToday = activeDate === todayStr();
+  document.querySelectorAll('.tbtn').forEach(btn => { btn.style.display = onToday ? 'none' : ''; });
 }
 
 // ─── NAV ─────────────────────────────────────────────────────────
@@ -995,7 +998,7 @@ const DEF_SCHED = [
   {time:'13:00–15:00',label:'Tahlil va rejalashtirish',tag:'pul'},
   {time:'15:00–17:00',label:"Chuqur o'rganish",tag:'aql'},
   {time:'17:00–19:00',label:'Oila va ijtimoiy vaqt',tag:'ijt'},
-  {time:'19:00–21:00',label:'Shom + Xufton + muhasaba',tag:'deen'},
+  {time:'19:00–21:00',label:'Shom + Xufton + hisobot',tag:'deen'},
   {time:'21:00–22:00',label:"O'qish + ertangi reja",tag:'aql'},
   {time:'22:00',label:'Uyqu',tag:'jism'},
 ];
@@ -1618,7 +1621,7 @@ async function renderRevHist() {
       ${rv&&rv.tomorrow?`<div style="font-size:11px;color:var(--blue)">➡ ${rv.tomorrow}</div>`:''}
     </div>`;
   });
-  wrap.innerHTML=any?html:'<div class="empty">Hali muhasaba yo\'q</div>';
+  wrap.innerHTML=any?html:'<div class="empty">Hali hisobot yo\'q</div>';
 }
 
 // ─── SOG'LIQ ─────────────────────────────────────────────────────
@@ -1950,19 +1953,22 @@ const TAGS=['deen','jism','aql','pul','ijt'];
 async function renderSozlamalar() {
   if (!schedData) await getSched();
   if (!habitsData) await getHabits();
+  _doRenderSozlamalar();
+}
+function _doRenderSozlamalar() {
   document.getElementById('schedEdit').innerHTML=schedData.map((s,i)=>`
     <div class="ei">
-      <input value="${s.time}" placeholder="HH:MM" style="width:80px;flex:none" maxlength="5"
+      <input value="${(s.time||'').replace(/"/g,'&quot;')}" placeholder="HH:MM" style="width:80px;flex:none" maxlength="5"
         oninput="fmtTimeInput(this,${i},'sched')" onblur="fmtTimeInput(this,${i},'sched')">
-      <input value="${s.label}" placeholder="Faoliyat" oninput="schedData[${i}].label=this.value">
+      <input value="${(s.label||'').replace(/"/g,'&quot;')}" placeholder="Faoliyat" oninput="schedData[${i}].label=this.value">
       <select onchange="schedData[${i}].tag=this.value">${TAGS.map(t=>`<option ${s.tag===t?'selected':''}>${t}</option>`).join('')}</select>
-      <button class="bdel" onclick="schedData.splice(${i},1);renderSozlamalar()">✕</button>
+      <button class="bdel" onclick="removeSchedRow(${i})">✕</button>
     </div>`).join('');
   document.getElementById('habitEdit').innerHTML=habitsData.map((h,i)=>`
     <div class="ei">
-      <input value="${h.label}" placeholder="Odat nomi" oninput="habitsData[${i}].label=this.value">
+      <input value="${(h.label||'').replace(/"/g,'&quot;')}" placeholder="Odat nomi" oninput="habitsData[${i}].label=this.value">
       <select onchange="habitsData[${i}].tag=this.value">${TAGS.map(t=>`<option ${h.tag===t?'selected':''}>${t}</option>`).join('')}</select>
-      <button class="bdel" onclick="habitsData.splice(${i},1);renderSozlamalar()">✕</button>
+      <button class="bdel" onclick="removeHabitRow(${i})">✕</button>
     </div>`).join('');
 }
 function fmtTimeInput(el, i, src) {
@@ -1973,19 +1979,29 @@ function fmtTimeInput(el, i, src) {
 }
 function sortSched() {
   schedData.sort((a,b)=>{
-    const toMin=t=>{const p=t.split(':');return p.length<2?9999:parseInt(p[0])*60+parseInt(p[1]);};
+    const toMin=t=>{if(!t)return 9999;const p=t.split(':');return p.length<2?9999:parseInt(p[0])*60+parseInt(p[1]);};
     return toMin(a.time)-toMin(b.time);
   });
 }
 function addSchedRow(){
-  if(!schedData) return;
+  if(!schedData||!habitsData) return;
   schedData.push({time:'',label:'Yangi faoliyat',tag:'aql'});
-  renderSozlamalar();
+  _doRenderSozlamalar();
+}
+function removeSchedRow(i){
+  if(!schedData||!habitsData) return;
+  schedData.splice(i,1);
+  _doRenderSozlamalar();
 }
 function addHabitRow(){
-  if(!habitsData) return;
+  if(!schedData||!habitsData) return;
   habitsData.push({id:'h'+Date.now(),label:'Yangi odat',tag:'aql'});
-  renderSozlamalar();
+  _doRenderSozlamalar();
+}
+function removeHabitRow(i){
+  if(!schedData||!habitsData) return;
+  habitsData.splice(i,1);
+  _doRenderSozlamalar();
 }
 async function saveSchedule(){
   if(!schedData) return;
@@ -1994,7 +2010,7 @@ async function saveSchedule(){
   sortSched();
   await dbSet('schedule',schedData);
   toast('✅ Jadval saqlandi');
-  renderSozlamalar();
+  if(habitsData) _doRenderSozlamalar(); else renderSozlamalar();
 }
 async function saveHabits(){
   if(!habitsData) return;
