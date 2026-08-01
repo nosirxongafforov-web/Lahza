@@ -1948,8 +1948,9 @@ function closeDayPopup() {
 // ─── SOZLAMALAR ───────────────────────────────────────────────────
 const TAGS=['deen','jism','aql','pul','ijt'];
 async function renderSozlamalar() {
-  const [sched,habits]=await Promise.all([getSched(),getHabits()]);
-  document.getElementById('schedEdit').innerHTML=sched.map((s,i)=>`
+  if (!schedData) await getSched();
+  if (!habitsData) await getHabits();
+  document.getElementById('schedEdit').innerHTML=schedData.map((s,i)=>`
     <div class="ei">
       <input value="${s.time}" placeholder="HH:MM" style="width:80px;flex:none" maxlength="5"
         oninput="fmtTimeInput(this,${i},'sched')" onblur="fmtTimeInput(this,${i},'sched')">
@@ -1957,7 +1958,7 @@ async function renderSozlamalar() {
       <select onchange="schedData[${i}].tag=this.value">${TAGS.map(t=>`<option ${s.tag===t?'selected':''}>${t}</option>`).join('')}</select>
       <button class="bdel" onclick="schedData.splice(${i},1);renderSozlamalar()">✕</button>
     </div>`).join('');
-  document.getElementById('habitEdit').innerHTML=habits.map((h,i)=>`
+  document.getElementById('habitEdit').innerHTML=habitsData.map((h,i)=>`
     <div class="ei">
       <input value="${h.label}" placeholder="Odat nomi" oninput="habitsData[${i}].label=this.value">
       <select onchange="habitsData[${i}].tag=this.value">${TAGS.map(t=>`<option ${h.tag===t?'selected':''}>${t}</option>`).join('')}</select>
@@ -1977,21 +1978,29 @@ function sortSched() {
   });
 }
 function addSchedRow(){
-  schedData.push({time:'00:00',label:'Yangi faoliyat',tag:'aql'});
-  sortSched();
+  if(!schedData) return;
+  schedData.push({time:'',label:'Yangi faoliyat',tag:'aql'});
   renderSozlamalar();
 }
-function addHabitRow(){habitsData.push({id:'h'+Date.now(),label:'Yangi odat',tag:'aql'});renderSozlamalar();}
+function addHabitRow(){
+  if(!habitsData) return;
+  habitsData.push({id:'h'+Date.now(),label:'Yangi odat',tag:'aql'});
+  renderSozlamalar();
+}
 async function saveSchedule(){
+  if(!schedData) return;
   const bad=schedData.filter(s=>!s.label.trim());
   if(bad.length){toast('❌ Barcha faoliyat nomi to\'ldirilishi kerak');return;}
   sortSched();
   await dbSet('schedule',schedData);
-  schedData=null;
   toast('✅ Jadval saqlandi');
   renderSozlamalar();
 }
-async function saveHabits(){await dbSet('habits_config',habitsData);habitsData=null;await getHabits();toast('✅ Odatlar saqlandi');}
+async function saveHabits(){
+  if(!habitsData) return;
+  await dbSet('habits_config',habitsData);
+  toast('✅ Odatlar saqlandi');
+}
 async function requestNotifPerm(){
   if(!('Notification' in window)){toast('❌ Bildirishnoma qo\'llab-quvvatlanmaydi');return;}
   const p=await Notification.requestPermission();
