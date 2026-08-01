@@ -1984,8 +1984,8 @@ function addSchedRow(){
 function addHabitRow(){habitsData.push({id:'h'+Date.now(),label:'Yangi odat',tag:'aql'});renderSozlamalar();}
 async function saveSchedule(){
   const timeRx=/^\d{1,2}:\d{2}$/;
-  const bad=schedData.filter(s=>!timeRx.test(s.time)||!s.label.trim());
-  if(bad.length){toast('❌ Barcha vaqt va nom to\'ldirilishi kerak');return;}
+  const bad=schedData.filter(s=>(s.time&&!timeRx.test(s.time))||!s.label.trim());
+  if(bad.length){toast('❌ Barcha nom to\'ldirilishi va vaqt to\'g\'ri formatda bo\'lishi kerak');return;}
   sortSched();
   await dbSet('schedule',schedData);
   schedData=null;
