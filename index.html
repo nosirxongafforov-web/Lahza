@@ -49,7 +49,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 /* TOP BAR */
 #topBar{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;box-shadow:0 1px 0 rgba(0,0,0,.3);}
 .top-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;padding:0 16px;height:48px;gap:8px;}
-.top-brand{font-size:14px;font-weight:700;color:var(--gold2);letter-spacing:.04em;}
 .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;position:relative;}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:var(--text3);}
 .sync-dot.ok{background:var(--green);}
@@ -84,13 +83,40 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .umbtn.sign-out-btn{color:var(--red);}
 .umbtn.sign-out-btn:hover{background:var(--red-bg);color:var(--red);}
 
+/* RIGHT SETTINGS PANEL */
+#rightOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
+#rightOverlay.open{opacity:1;pointer-events:all;}
+#rightPanel{position:fixed;top:0;right:-320px;bottom:0;width:300px;background:#201e1c;border-left:1px solid var(--border);z-index:201;display:flex;flex-direction:column;transition:right .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
+#rightPanel.open{right:0;}
+.rp-head{display:flex;align-items:center;justify-content:flex-end;padding:14px 16px 0;}
+.rp-close{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px 6px;border-radius:var(--rx);line-height:1;transition:all .2s;}
+.rp-close:hover{background:var(--bg3);color:var(--text);}
+.rp-user{padding:16px 20px 18px;border-bottom:1px solid var(--border);}
+.rp-avatar{width:44px;height:44px;border-radius:50%;background:var(--gold);color:#111;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-bottom:10px;overflow:hidden;}
+.rp-avatar img{width:100%;height:100%;object-fit:cover;}
+.rp-uname{font-size:14px;font-weight:600;color:var(--text);}
+.rp-uemail{font-size:11px;color:var(--text3);margin-top:2px;}
+.rp-section{padding:8px;border-bottom:1px solid var(--border);}
+.rp-sec-title{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:4px 8px 6px;}
+.rp-btn{display:flex;align-items:center;gap:8px;width:100%;background:none;border:none;color:var(--text2);font-size:13px;padding:9px 10px;cursor:pointer;border-radius:var(--rx);transition:all .2s;text-align:left;}
+.rp-btn:hover{background:var(--bg3);color:var(--text);}
+.rp-notif-row{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:var(--rx);cursor:pointer;transition:background .2s;}
+.rp-notif-row:hover{background:var(--bg3);}
+.rp-notif-name{font-size:13px;color:var(--text2);}
+.rp-notif-bell{font-size:14px;color:var(--text3);transition:color .2s;}
+.rp-notif-bell.on{color:var(--gold2);}
+.rp-footer{margin-top:auto;padding:12px 8px 24px;}
+.rp-signout{color:var(--red) !important;}
+.rp-signout:hover{background:var(--red-bg) !important;}
+body.light #rightPanel{background:#eae8e4;border-left-color:var(--border);}
+
 /* SIDEBAR */
 #sideOverlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;opacity:0;pointer-events:none;transition:opacity .25s;}
 #sideOverlay.open{opacity:1;pointer-events:all;}
 #sidebar{position:fixed;top:0;left:calc(-1 * var(--sw));bottom:0;width:var(--sw);background:#201e1c;border-right:1px solid var(--border);z-index:201;display:flex;flex-direction:column;transition:left .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;}
 #sidebar.open{left:0;}
 .sb-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 14px;border-bottom:1px solid var(--border);}
-.sb-logo{font-size:16px;font-weight:700;color:var(--text);letter-spacing:.04em;}
+.sb-logo{font-size:15px;font-weight:700;color:#E8E6E0;letter-spacing:.04em;display:flex;align-items:center;gap:6px;}
 .sb-close{background:none;border:none;color:var(--text3);font-size:18px;cursor:pointer;padding:4px 6px;border-radius:var(--rx);line-height:1;transition:all .2s;}
 .sb-close:hover{background:var(--bg3);color:var(--text);}
 .sb-nav{padding:10px 0;flex:1;}
@@ -98,8 +124,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,'Segoe UI'
 .sn:hover{background:rgba(255,255,255,0.04);color:var(--text);}
 .sn.active{color:var(--text);background:rgba(255,255,255,0.06);border-left-color:var(--gold);}
 .sn-icon{width:24px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
-.top-brand{background:none;border:1px solid var(--border2);color:var(--gold2);font-size:14px;font-weight:700;letter-spacing:.04em;cursor:pointer;padding:6px 12px;border-radius:var(--rx);transition:all .2s;}
-.top-brand:hover{background:var(--bg3);}
+.top-brand{background:none;border:none;color:#E8E6E0;font-size:15px;font-weight:700;letter-spacing:.04em;cursor:pointer;padding:4px 2px;display:inline-flex;align-items:center;gap:6px;transition:opacity .2s;}
+.top-brand:hover{opacity:.7;}
 .theme-btn{background:none;border:none;color:var(--text2);font-size:16px;cursor:pointer;padding:4px 6px;border-radius:var(--rx);line-height:1;transition:color .2s;}
 .theme-btn:hover{color:var(--text);}
 
@@ -109,7 +135,8 @@ body.light{
   --text:#1c1b18;--text2:#4a4844;--text3:#8a8784;
   --border:rgba(0,0,0,0.07);--border2:rgba(0,0,0,0.12);
 }
-body.light .top-brand{border-color:rgba(0,0,0,0.12);color:#1c1b18;}
+body.light .top-brand{color:#1c1b18;}
+body.light .sb-logo{color:#1c1b18;}
 body.light #sidebar{background:#eae8e4;border-right-color:var(--border);}
 body.light #sideOverlay{background:rgba(0,0,0,.3);}
 body.light .user-menu{box-shadow:0 8px 24px rgba(0,0,0,.12);}
@@ -439,7 +466,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0;}
 <!-- TOP BAR -->
 <div id="topBar" style="display:none">
   <div class="top-inner">
-    <button class="top-brand" onclick="openSidebar()">☾ Lahza</button>
+    <button class="top-brand" onclick="openSidebar()"><svg width="13" height="13" viewBox="0 0 192 192" style="flex-shrink:0;display:block"><path d="M 70 44 A 58 58 0 1 1 70 148 A 52 52 0 1 0 70 44 Z" fill="currentColor" transform="rotate(28, 96, 96)"/></svg>Lahza</button>
     <div class="top-right">
       <button class="top-date" id="topDate" onclick="toggleDatePicker(event)"></button>
       <div id="datePicker">
@@ -451,12 +478,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0;}
         <div class="dp-grid" id="dpGrid"></div>
       </div>
       <div class="sync-dot ok" id="syncDot"></div>
-      <button class="user-btn" onclick="toggleUserMenu()" id="userBtn"></button>
-      <div class="user-menu" id="userMenu">
-        <div class="umname" id="umName"></div>
-        <button class="umbtn" id="themeMenuBtn" onclick="toggleTheme()">◐ <span id="themeMenuLbl">Kunduzgi rejim</span></button>
-        <button class="umbtn sign-out-btn" onclick="signOut()">🚪 Chiqish</button>
-      </div>
+      <button class="user-btn" onclick="openRightPanel()" id="userBtn"></button>
     </div>
   </div>
 </div>
@@ -467,7 +489,7 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0;}
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sb-head">
-    <span class="sb-logo">☾ Lahza</span>
+    <span class="sb-logo"><svg width="13" height="13" viewBox="0 0 192 192" style="flex-shrink:0;display:block"><path d="M 70 44 A 58 58 0 1 1 70 148 A 52 52 0 1 0 70 44 Z" fill="currentColor" transform="rotate(28, 96, 96)"/></svg>Lahza</span>
     <button class="sb-close" onclick="closeSidebar()">✕</button>
   </div>
   <div class="sb-nav">
@@ -479,9 +501,34 @@ hr{border:none;border-top:1px solid var(--border);margin:14px 0;}
     <button class="sn" data-page="soglik" onclick="showPage('soglik',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>Sog'liq</button>
     <button class="sn" data-page="reja" onclick="showPage('reja',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span>Reja</button>
     <button class="sn" data-page="tarix" onclick="showPage('tarix',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>Tarix</button>
-    <button class="sn" data-page="sozlamalar" onclick="showPage('sozlamalar',event)"><span class="sn-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span>Sozlamalar</button>
   </div>
 </nav>
+
+<!-- RIGHT PANEL OVERLAY -->
+<div id="rightOverlay" onclick="closeRightPanel()"></div>
+
+<!-- RIGHT SETTINGS PANEL -->
+<div id="rightPanel">
+  <div class="rp-head">
+    <button class="rp-close" onclick="closeRightPanel()">✕</button>
+  </div>
+  <div class="rp-user">
+    <div class="rp-avatar" id="rpAvatar"></div>
+    <div class="rp-uname" id="rpName"></div>
+    <div class="rp-uemail" id="rpEmail"></div>
+  </div>
+  <div class="rp-section">
+    <button class="rp-btn" id="rpThemeBtn" onclick="toggleTheme()">◐ <span id="rpThemeLbl">Kunduzgi rejim</span></button>
+    <button class="rp-btn" onclick="showPage('sozlamalar',event);closeRightPanel();">⚙ Sozlamalar</button>
+  </div>
+  <div class="rp-section">
+    <div class="rp-sec-title">Namoz bildirishnomalari</div>
+    <div id="rpNotifs"></div>
+  </div>
+  <div class="rp-footer">
+    <button class="rp-btn rp-signout" onclick="signOut()">🚪 Chiqish</button>
+  </div>
+</div>
 
 <div id="toast"></div>
 
@@ -2014,7 +2061,7 @@ async function signInWithGoogle() {
   } catch(e){ err.textContent='Xato: '+e.message; err.style.display='block'; }
 }
 async function signOut() {
-  await sb.auth.signOut(); document.getElementById('userMenu').classList.remove('open');
+  await sb.auth.signOut(); closeRightPanel();
   showLoginScreen();
 }
 function showLoginScreen() {
@@ -2023,24 +2070,38 @@ function showLoginScreen() {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
 }
 function hideLoginScreen() { document.getElementById('loginScreen').classList.remove('show'); }
-function toggleUserMenu() { document.getElementById('userMenu').classList.toggle('open'); }
+function openRightPanel() {
+  document.getElementById('rightPanel').classList.add('open');
+  document.getElementById('rightOverlay').classList.add('open');
+  renderRightPanelNotifs();
+}
+function closeRightPanel() {
+  document.getElementById('rightPanel').classList.remove('open');
+  document.getElementById('rightOverlay').classList.remove('open');
+}
+async function renderRightPanelNotifs() {
+  const pref = await dbGetSafe('notif_prefs')||{};
+  document.getElementById('rpNotifs').innerHTML = PRAYERS_ALL.map(name => `
+    <div class="rp-notif-row" onclick="toggleNotif('${name}');renderRightPanelNotifs();">
+      <span class="rp-notif-name">${name}</span>
+      <span class="rp-notif-bell ${pref[name]?'on':''}">🔔</span>
+    </div>`).join('');
+}
 function toggleTheme() {
   const isLight = document.body.classList.toggle('light');
   localStorage.setItem('lahza_theme', isLight ? 'light' : 'dark');
-  const lbl = document.getElementById('themeMenuLbl');
+  const lbl = document.getElementById('rpThemeLbl');
   if (lbl) lbl.textContent = isLight ? 'Tungi rejim' : 'Kunduzgi rejim';
 }
 (function initTheme() {
   const isLight = localStorage.getItem('lahza_theme') === 'light';
   if (isLight) document.body.classList.add('light');
   window.addEventListener('DOMContentLoaded', () => {
-    const lbl = document.getElementById('themeMenuLbl');
+    const lbl = document.getElementById('rpThemeLbl');
     if (lbl) lbl.textContent = isLight ? 'Tungi rejim' : 'Kunduzgi rejim';
   });
 })();
 document.addEventListener('click',function(e){
-  const m=document.getElementById('userMenu'),b=document.getElementById('userBtn');
-  if(m&&!m.contains(e.target)&&b&&!b.contains(e.target)) m.classList.remove('open');
   const dp=document.getElementById('datePicker'),td=document.getElementById('topDate');
   if(dp&&!dp.contains(e.target)&&td&&!td.contains(e.target)) dp.classList.remove('open');
 });
@@ -2093,13 +2154,18 @@ function pickDate(ds) {
   refreshPage();
 }
 function renderUserInfo(user) {
-  const btn=document.getElementById('userBtn'), nm=document.getElementById('umName'); if(!btn) return;
+  const btn=document.getElementById('userBtn'); if(!btn) return;
   const name=user.user_metadata?.full_name||user.email||'';
   const avatar=user.user_metadata?.avatar_url||'';
-  nm.textContent=name;
   document.getElementById('topDate').textContent=DU[new Date().getDay()].slice(0,2)+', '+new Date().getDate()+' '+MN[new Date().getMonth()];
   if(avatar) btn.innerHTML=`<img src="${avatar}" class="uavatar" alt="">`;
   else btn.innerHTML=`<div class="uph">${name.charAt(0).toUpperCase()||'U'}</div>`;
+  const rpName=document.getElementById('rpName'), rpEmail=document.getElementById('rpEmail'), rpAvatar=document.getElementById('rpAvatar');
+  if(rpName){
+    rpName.textContent=name;
+    rpEmail.textContent=user.email||'';
+    rpAvatar.innerHTML=avatar?`<img src="${avatar}" alt="">`:name.charAt(0).toUpperCase()||'U';
+  }
 }
 
 // ─── PWA ─────────────────────────────────────────────────────────
