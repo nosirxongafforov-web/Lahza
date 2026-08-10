@@ -1345,13 +1345,28 @@ async function renderNamoz() {
   renderPrayerStats();
 }
 
-async function cyclePrayer(name) {
-  const p = await dbGetSafe('prayers_'+activeDate)||{};
+function cyclePrayer(name) {
+  const p = _cache['prayers_'+activeDate] || {};
   const cur = p[name]||'none';
-  p[name] = cur==='none'?'vaqtida':cur==='vaqtida'?'qazo':'none';
+  const next = cur==='none'?'vaqtida':cur==='vaqtida'?'qazo':'none';
+  p[name] = next;
   _cache['prayers_'+activeDate] = p;
-  await dbSet('prayers_'+activeDate, p);
-  renderNamoz();
+
+  // Optimistic DOM update — no await, instant feedback
+  const btn = [...document.querySelectorAll('#prayerGrid .pb')].find(b => b.getAttribute('onclick')?.includes(`'${name}'`));
+  if (btn) {
+    btn.classList.remove('vaqtida','qazo');
+    if (next!=='none') btn.classList.add(next);
+    const pi = btn.querySelector('.pi');
+    if (pi) pi.textContent = next==='vaqtida'?'✓':next==='qazo'?'◑':'○';
+  }
+  const done = PRAYERS_ALL.filter(n=>p[n]==='vaqtida'||p[n]==='qazo').length;
+  const pBar = document.getElementById('pBar'), pPct = document.getElementById('pPct');
+  if (pBar) pBar.style.width = Math.round(done/5*100)+'%';
+  if (pPct) pPct.textContent = Math.round(done/5*100)+'%';
+
+  dbSet('prayers_'+activeDate, p); // background save, no await
+  renderWeekPrayer(); // refresh weekly grid, non-blocking
 }
 async function toggleNotif(name) {
   const pref = await dbGetSafe('notif_prefs')||{};
@@ -1385,7 +1400,10 @@ async function renderPrayerStats() {
 
 // ─── ILM ─────────────────────────────────────────────────────────
 async function renderIlm() {
-  const sessions = await dbGetSafe('learn_sessions')||[];
+  const [sessionsRaw, memosRaw] = await Promise.all([
+    dbGetSafe('learn_sessions'), dbGetSafe('memorizations'),
+  ]);
+  const sessions = sessionsRaw||[];
   const totMin=sessions.reduce((s,ss)=>s+ss.mins,0);
   const totPg=sessions.reduce((s,ss)=>s+ss.pages,0);
   let streak=0; const d=new Date();
@@ -1430,7 +1448,7 @@ async function renderIlm() {
       <button class="bdel" onclick="delLearnSession(${s.id})">✕</button>
     </div>`).join('');
 
-  renderMemoList();
+  _paintMemoList(memosRaw||[]);
 }
 async function addLearnSession() {
   const topic=document.getElementById('lTopic').value.trim();
@@ -1452,6 +1470,9 @@ async function delLearnSession(id) {
 
 async function renderMemoList() {
   const memos = await dbGetSafe('memorizations')||[];
+  _paintMemoList(memos);
+}
+function _paintMemoList(memos) {
   const list = document.getElementById('memoList');
   if(!memos.length){list.innerHTML='<div class="empty">📖 Hali hifz yo\'q</div>';return;}
   list.innerHTML=memos.map(m => {
@@ -2204,32 +2225,58 @@ if('serviceWorker' in navigator) {
 }
 
 // ─── BOOT ─────────────────────────────────────────────────────────
+let _appStarted = false;
+async function preloadToday() {
+  const today = todayStr();
+  await Promise.all([
+    dbGetSafe('prayers_'+today),
+    dbGetSafe('hstate_'+today),
+    dbGetSafe('daydata_'+today),
+    getSched(),
+    getHabits(),
+  ]);
+}
+async function startApp(user) {
+  if (_appStarted) return;
+  _appStarted = true;
+  hideLoginScreen();
+  document.getElementById('loadingScreen').style.display='none';
+  document.getElementById('topBar').style.display='';
+  renderUserInfo(user); setSyncDot('ok');
+  await preloadToday(); // batch-load today's data into cache before first render
+  renderBugun();
+  fetchPrayerTimes(todayStr()).then(t=>{ if(t) schedulePrayerNotifs(t); }).catch(()=>{});
+  if (navigator.onLine) flushPendingQueue();
+}
+async function handleSession(session) {
+  const user = session?.user;
+  if (!user) { document.getElementById('loadingScreen').style.display='none'; showLoginScreen(); return; }
+  if (user.email !== ALLOWED_EMAIL) {
+    await sb.auth.signOut();
+    const e=document.getElementById('loginErr'); e.textContent='⛔ Ruxsat yo\'q.'; e.style.display='block';
+    showLoginScreen(); document.getElementById('loadingScreen').style.display='none';
+    return;
+  }
+  await startApp(user);
+}
 async function boot() {
   document.getElementById('loadMsg').textContent='Ulanilmoqda...';
   try {
     if(!window.supabase||!window.supabase.createClient) throw new Error('Supabase yuklanmadi');
     sb=window.supabase.createClient(SB_URL,SB_KEY);
-    sb.auth.onAuthStateChange(async(event,session)=>{
-      if(event==='SIGNED_IN'||event==='TOKEN_REFRESHED'){
-        const user=session?.user; if(!user){showLoginScreen();return;}
-        if(user.email!==ALLOWED_EMAIL){
-          await sb.auth.signOut();
-          const e=document.getElementById('loginErr'); e.textContent='⛔ Ruxsat yo\'q.'; e.style.display='block';
-          showLoginScreen(); document.getElementById('loadingScreen').style.display='none'; return;
-        }
-        hideLoginScreen();
-        document.getElementById('loadingScreen').style.display='none';
-        document.getElementById('topBar').style.display='';
-        renderUserInfo(user); setSyncDot('ok');
-        renderBugun();
-        fetchPrayerTimes(todayStr()).then(t=>{ if(t) schedulePrayerNotifs(t); }).catch(()=>{});
-        if (navigator.onLine) flushPendingQueue();
-      } else if(event==='SIGNED_OUT'){
+    // onAuthStateChange only reacts to *future* sign-in/out events — the
+    // initial session is checked once below via getSession(), not here,
+    // so login is never validated twice.
+    sb.auth.onAuthStateChange((event,session)=>{
+      if (event==='SIGNED_OUT') {
+        _appStarted = false;
         showLoginScreen(); document.getElementById('loadingScreen').style.display='none';
+      } else if (event==='SIGNED_IN' && !_appStarted) {
+        handleSession(session);
       }
     });
     const {data:{session}}=await sb.auth.getSession();
-    if(!session){ document.getElementById('loadingScreen').style.display='none'; showLoginScreen(); }
+    await handleSession(session);
   } catch(e) {
     const el=document.getElementById('loadError'); el.textContent='❌ '+e.message; el.style.display='block';
     document.querySelector('.load-spinner').style.display='none'; document.getElementById('loadMsg').style.display='none';
