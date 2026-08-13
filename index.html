@@ -990,6 +990,8 @@ const DS = ['Ya','Du','Se','Ch','Pa','Ju','Sh'];
 function fmtS(d) { const dt = new Date(d+'T00:00:00'); return dt.getDate()+' '+MN[dt.getMonth()]; }
 function fmtF(d) { const dt = new Date(d+'T00:00:00'); return DU[dt.getDay()]+', '+dt.getDate()+' '+MF[dt.getMonth()]+' '+dt.getFullYear(); }
 function isToday(d) { return d === todayStr(); }
+function tomorrowStr() { return localDateStr(new Date(new Date().getTime() + 86400000)); }
+function isTomorrow(d) { return d === tomorrowStr(); }
 function getLast7() { return Array.from({length:7},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(6-i)); return d.toISOString().slice(0,10); }); }
 function getLast14() { return Array.from({length:14},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-i); return d.toISOString().slice(0,10); }); }
 function getLast30() { return Array.from({length:30},(_,i)=>{ const d=new Date(); d.setDate(d.getDate()-(29-i)); return d.toISOString().slice(0,10); }); }
@@ -1133,7 +1135,7 @@ async function schedulePrayerNotifs(timings) {
 async function renderBugun() {
   updateDateLabels();
   const isT = isToday(activeDate);
-  const tomorrow = localDateStr(new Date(new Date().getTime() + 86400000));
+  const isTmrw = isTomorrow(activeDate);
   const isFuture = activeDate > todayStr();
 
   // Reja banner
@@ -1142,10 +1144,9 @@ async function renderBugun() {
 
   // Override edit button visible for today and tomorrow
   const overrideBtn = document.getElementById('schedOverrideBtn');
-  const isTomorrow = activeDate === tomorrow;
   if (overrideBtn) {
-    overrideBtn.style.display = (isT || isTomorrow) ? 'inline-flex' : 'none';
-    overrideBtn.textContent = isTomorrow ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
+    overrideBtn.style.display = (isT || isTmrw) ? 'inline-flex' : 'none';
+    overrideBtn.textContent = isTmrw ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
   }
 
   const [baseSched, habits, hs, prayers, daydata, timings, override] = await Promise.all([
@@ -1154,7 +1155,7 @@ async function renderBugun() {
     dbGetSafe('prayers_'+activeDate),
     dbGetSafe('daydata_'+activeDate),
     fetchPrayerTimes(activeDate),
-    isT ? dbGetSafe('schedule_override_'+activeDate) : Promise.resolve(null),
+    (isT || isTmrw) ? dbGetSafe('schedule_override_'+activeDate) : Promise.resolve(null),
   ]);
   const sched = override || baseSched;
   const hstate = hs||{}, pr = prayers||{}, dd = daydata||{};
@@ -1216,11 +1217,12 @@ async function renderBugun() {
 let _overrideData = null;
 let _overrideOpen = false;
 async function toggleSchedOverride() {
-  if (!isToday(activeDate)) return;
+  if (!isToday(activeDate) && !isTomorrow(activeDate)) return;
   _overrideOpen = !_overrideOpen;
   const editDiv = document.getElementById('schedOverrideEdit');
   const btn = document.getElementById('schedOverrideBtn');
-  if (!_overrideOpen) { editDiv.style.display='none'; btn.textContent='✏ Bugunni tahrirlash'; return; }
+  const label = isTomorrow(activeDate) ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
+  if (!_overrideOpen) { editDiv.style.display='none'; btn.textContent=label; return; }
   btn.textContent='✕ Yopish';
   editDiv.style.display='block';
   const existing = await dbGetSafe('schedule_override_'+activeDate);
@@ -1229,7 +1231,8 @@ async function toggleSchedOverride() {
 }
 function renderOverrideEdit() {
   const editDiv = document.getElementById('schedOverrideEdit');
-  editDiv.innerHTML = `<div style="font-size:10px;color:var(--text3);margin:8px 0 6px">Faqat bugun uchun — ertaga asosiy jadval qaytadi</div>`+
+  const note = isTomorrow(activeDate) ? 'Faqat ertaga uchun — indinga asosiy jadval qaytadi' : 'Faqat bugun uchun — ertaga asosiy jadval qaytadi';
+  editDiv.innerHTML = `<div style="font-size:10px;color:var(--text3);margin:8px 0 6px">${note}</div>`+
     _overrideData.map((s,i)=>`
     <div class="ei">
       <input value="${s.time}" placeholder="Vaqt" style="width:80px;flex:none" oninput="fmtOvTime(this,${i})">
@@ -1248,18 +1251,20 @@ function fmtOvTime(el, i) {
   _overrideData[i].time = el.value;
 }
 async function saveSchedOverride() {
+  const savedForTomorrow = isTomorrow(activeDate);
   await dbSet('schedule_override_'+activeDate, _overrideData);
   _overrideOpen = false;
   document.getElementById('schedOverrideEdit').style.display='none';
-  document.getElementById('schedOverrideBtn').textContent='✏ Bugunni tahrirlash';
-  toast('✅ Bugungi jadval saqlandi');
+  document.getElementById('schedOverrideBtn').textContent = savedForTomorrow ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
+  toast(savedForTomorrow ? '✅ Ertangi jadval saqlandi' : '✅ Bugungi jadval saqlandi');
   renderBugun();
 }
 async function clearSchedOverride() {
+  const clearedForTomorrow = isTomorrow(activeDate);
   await dbSet('schedule_override_'+activeDate, null);
   _overrideOpen = false;
   document.getElementById('schedOverrideEdit').style.display='none';
-  document.getElementById('schedOverrideBtn').textContent='✏ Bugunni tahrirlash';
+  document.getElementById('schedOverrideBtn').textContent = clearedForTomorrow ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
   toast('✅ Asosiy jadvalga qaytildi');
   renderBugun();
 }
