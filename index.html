@@ -315,7 +315,7 @@ body.light .wdn{color:rgba(0,0,0,0.25);}
 body.light .wd.today-col{border-color:rgba(0,0,0,0.12);}
 
 /* SCHEDULE */
-.slist{display:flex;flex-direction:column;gap:5px;}
+.slist{display:flex;flex-direction:column;gap:5px;transition:opacity .15s ease;}
 .srow{display:flex;gap:10px;align-items:flex-start;padding:11px 14px;background:rgba(255,255,255,0.03);border-radius:10px;border-left:2px solid transparent;}
 .srow.cur{border-left-color:var(--gold);background:rgba(201,168,76,.08);}
 .stime{font-size:12px;color:rgba(255,255,255,0.25);width:80px;flex-shrink:0;padding-top:1px;}
@@ -323,6 +323,18 @@ body.light .wd.today-col{border-color:rgba(0,0,0,0.12);}
 .srow.cur .slbl{color:rgba(255,255,255,0.75);}
 body.light .stime{color:rgba(0,0,0,0.25);}
 body.light .slbl{color:rgba(0,0,0,0.75);}
+.srow.editing{align-items:center;padding:8px 10px;border-left-color:transparent;}
+.srow.editing .se-time,.srow.editing .se-label{background:transparent;border:none;border-bottom:1px solid var(--border2);border-radius:0;padding:2px 4px;color:var(--text);font-family:inherit;outline:none;transition:border-color .15s ease;}
+.srow.editing .se-time{width:88px;flex:none;font-size:12px;}
+.srow.editing .se-label{flex:1;font-size:14px;min-width:0;}
+.srow.editing .se-time:focus,.srow.editing .se-label:focus{border-bottom-color:rgba(255,255,255,0.2);}
+.srow.editing .se-del{margin-left:auto;flex-shrink:0;background:transparent;border:none;color:var(--text3);font-size:13px;cursor:pointer;padding:4px 8px;border-radius:var(--rx);transition:all .15s ease;}
+.srow.editing .se-del:hover{background:var(--red-bg);color:var(--red);}
+.se-add{width:100%;background:transparent;border:1px dashed var(--border2);border-radius:10px;padding:10px;font-size:12px;color:var(--text2);cursor:pointer;transition:all .15s ease;margin-top:5px;}
+.se-add:hover{background:var(--bg3);color:var(--text);border-color:var(--text2);}
+#schedEditFoot{display:none;gap:7px;margin-top:12px;}
+body.light .srow.editing .se-time,body.light .srow.editing .se-label{border-bottom-color:rgba(0,0,0,0.12);color:var(--text);}
+body.light .srow.editing .se-time:focus,body.light .srow.editing .se-label:focus{border-bottom-color:rgba(0,0,0,0.2);}
 
 /* BADGES */
 .badge{display:inline-block;font-size:9px;font-weight:600;padding:2px 7px;border-radius:99px;}
@@ -575,10 +587,14 @@ body.light .sec-lbl{color:rgba(0,0,0,0.35);}
   <div class="card">
     <div class="ctitle" style="display:flex;justify-content:space-between;align-items:center">
       <span>🕐 Kunlik jadval</span>
-      <button class="bout bsm" id="schedOverrideBtn" onclick="toggleSchedOverride()" style="font-size:10px;padding:3px 8px">✏ Bugunni tahrirlash</button>
+      <button class="bout bsm" id="schedOverrideBtn" onclick="toggleSchedOverride()">Tahrirlash</button>
     </div>
     <div class="slist" id="schedList"></div>
-    <div id="schedOverrideEdit" style="display:none"></div>
+    <div id="schedEditFoot">
+      <button class="btn bsm" onclick="saveSchedOverride()">Saqlash</button>
+      <button class="bout bsm" onclick="cancelSchedOverride()">Bekor qilish</button>
+      <button class="bout bsm" style="color:var(--red)" onclick="clearSchedOverride()">Asosiyga qayt</button>
+    </div>
   </div>
   <div class="card"><div class="ctitle">✅ Odatlar</div><div class="hlist" id="habitList"></div></div>
   <div class="card">
@@ -1146,7 +1162,7 @@ async function renderBugun() {
   const overrideBtn = document.getElementById('schedOverrideBtn');
   if (overrideBtn) {
     overrideBtn.style.display = (isT || isTmrw) ? 'inline-flex' : 'none';
-    overrideBtn.textContent = isTmrw ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
+    overrideBtn.textContent = 'Tahrirlash';
   }
 
   const [baseSched, habits, hs, prayers, daydata, timings, override] = await Promise.all([
@@ -1163,20 +1179,11 @@ async function renderBugun() {
   // Schedule — Asr annotation as plain dim text
   const asrStr = timings?.Asr ? timings.Asr.slice(0,5) : null;
   const asrMin = asrStr ? parseInt(asrStr)*60 + parseInt(asrStr.slice(3)) : -1;
-  function blockContainsAsr(tr) {
-    if (asrMin < 0) return false;
-    const m = tr.match(/^(\d+):(\d+)/), m2 = tr.match(/[–-](\d+):(\d+)/);
-    if (!m || !m2) return false;
-    return asrMin >= parseInt(m[1])*60+parseInt(m[2]) && asrMin < parseInt(m2[1])*60+parseInt(m2[2]);
-  }
   const cur = isT ? getCurBlock(sched) : -1;
-  document.getElementById('schedList').innerHTML = sched.map((s,i) => {
-    const asrNote = blockContainsAsr(s.time) ? ` <span style="color:var(--text3)"> · Asr ${asrStr}</span>` : '';
-    return `<div class="srow ${i===cur?'cur':''}">
-      <div class="stime">${s.time}</div>
-      <div class="slbl">${s.label}${i===cur?' <span style="font-size:10px;color:var(--text3)"> ← hozir</span>':''}${asrNote}</div>
-    </div>`;
-  }).join('');
+  _schedCtx = { sched, cur, asrStr, asrMin };
+  _schedEditMode = false;
+  _overrideData = null;
+  paintSchedDisplay();
 
   // Habits — disable for future
   const habitsInteractive = isT;
@@ -1215,35 +1222,70 @@ async function renderBugun() {
 
 // ─── SCHEDULE OVERRIDE ────────────────────────────────────────────
 let _overrideData = null;
-let _overrideOpen = false;
+let _schedEditMode = false;
+let _schedCtx = { sched: [], cur: -1, asrStr: null, asrMin: -1 };
+
+function blockContainsAsr(tr, asrMin) {
+  if (asrMin < 0) return false;
+  const m = tr.match(/^(\d+):(\d+)/), m2 = tr.match(/[–-](\d+):(\d+)/);
+  if (!m || !m2) return false;
+  return asrMin >= parseInt(m[1])*60+parseInt(m[2]) && asrMin < parseInt(m2[1])*60+parseInt(m2[2]);
+}
+function paintSchedDisplay() {
+  const listEl = document.getElementById('schedList');
+  if (_schedEditMode) { listEl.style.opacity = '1'; return; } // stale fade timeout — an edit session started since it was scheduled
+  const { sched, cur, asrStr, asrMin } = _schedCtx;
+  listEl.innerHTML = sched.map((s,i) => {
+    const asrNote = blockContainsAsr(s.time, asrMin) ? ` <span style="color:var(--text3)"> · Asr ${asrStr}</span>` : '';
+    return `<div class="srow ${i===cur?'cur':''}">
+      <div class="stime">${s.time}</div>
+      <div class="slbl">${s.label}${i===cur?' <span style="font-size:10px;color:var(--text3)"> ← hozir</span>':''}${asrNote}</div>
+    </div>`;
+  }).join('') || '<div class="empty">Jadval bo\'sh</div>';
+  listEl.style.opacity = '1';
+  const foot = document.getElementById('schedEditFoot');
+  if (foot) foot.style.display = 'none';
+}
+function paintSchedEdit() {
+  const listEl = document.getElementById('schedList');
+  if (!_schedEditMode || !_overrideData) { listEl.style.opacity = '1'; return; } // stale fade timeout — state moved on since it was scheduled
+  listEl.innerHTML = _overrideData.map((s,i) => `
+    <div class="srow editing">
+      <input class="se-time" value="${(s.time||'').replace(/"/g,'&quot;')}" placeholder="Vaqt" oninput="fmtOvTime(this,${i})">
+      <input class="se-label" value="${(s.label||'').replace(/"/g,'&quot;')}" placeholder="Faoliyat" oninput="_overrideData[${i}].label=this.value">
+      <button class="se-del" onclick="removeOverrideRow(${i})">✕</button>
+    </div>`).join('') + `<button class="se-add" onclick="addOverrideRow()">+ Qo'shish</button>`;
+  listEl.style.opacity = '1';
+  const foot = document.getElementById('schedEditFoot');
+  if (foot) foot.style.display = 'flex';
+}
+function fadeSchedSwap(paintFn) {
+  const listEl = document.getElementById('schedList');
+  listEl.style.opacity = '0';
+  setTimeout(() => { paintFn(); listEl.style.opacity = '1'; }, 150);
+}
 async function toggleSchedOverride() {
   if (!isToday(activeDate) && !isTomorrow(activeDate)) return;
-  _overrideOpen = !_overrideOpen;
-  const editDiv = document.getElementById('schedOverrideEdit');
-  const btn = document.getElementById('schedOverrideBtn');
-  const label = isTomorrow(activeDate) ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
-  if (!_overrideOpen) { editDiv.style.display='none'; btn.textContent=label; return; }
-  btn.textContent='✕ Yopish';
-  editDiv.style.display='block';
+  if (_schedEditMode) { cancelSchedOverride(); return; }
   const existing = await dbGetSafe('schedule_override_'+activeDate);
-  _overrideData = existing ? JSON.parse(JSON.stringify(existing)) : JSON.parse(JSON.stringify(await getSched()));
-  renderOverrideEdit();
+  _overrideData = existing ? JSON.parse(JSON.stringify(existing)) : JSON.parse(JSON.stringify(_schedCtx.sched));
+  _schedEditMode = true;
+  document.getElementById('schedOverrideBtn').textContent = 'Yopish';
+  fadeSchedSwap(paintSchedEdit);
 }
-function renderOverrideEdit() {
-  const editDiv = document.getElementById('schedOverrideEdit');
-  const note = isTomorrow(activeDate) ? 'Faqat ertaga uchun — indinga asosiy jadval qaytadi' : 'Faqat bugun uchun — ertaga asosiy jadval qaytadi';
-  editDiv.innerHTML = `<div style="font-size:10px;color:var(--text3);margin:8px 0 6px">${note}</div>`+
-    _overrideData.map((s,i)=>`
-    <div class="ei">
-      <input value="${s.time}" placeholder="Vaqt" style="width:80px;flex:none" oninput="fmtOvTime(this,${i})">
-      <input value="${s.label}" placeholder="Faoliyat" oninput="_overrideData[${i}].label=this.value">
-      <button class="bdel" onclick="_overrideData.splice(${i},1);renderOverrideEdit()">✕</button>
-    </div>`).join('')+
-    `<div style="display:flex;gap:7px;margin-top:8px">
-      <button class="bout bsm" onclick="_overrideData.push({time:'00:00',label:'Yangi blok',tag:'aql'});renderOverrideEdit()">+ Qo'shish</button>
-      <button class="btn bsm" onclick="saveSchedOverride()">Saqlash</button>
-      <button class="bout bsm" style="color:var(--red)" onclick="clearSchedOverride()">Asosiyga qayt</button>
-    </div>`;
+function cancelSchedOverride() {
+  _schedEditMode = false;
+  _overrideData = null;
+  document.getElementById('schedOverrideBtn').textContent = 'Tahrirlash';
+  fadeSchedSwap(paintSchedDisplay);
+}
+function addOverrideRow() {
+  _overrideData.push({time:'00:00',label:'Yangi blok',tag:'aql'});
+  paintSchedEdit();
+}
+function removeOverrideRow(i) {
+  _overrideData.splice(i,1);
+  paintSchedEdit();
 }
 function fmtOvTime(el, i) {
   let v = el.value.replace(/\D/g,'');
@@ -1253,18 +1295,15 @@ function fmtOvTime(el, i) {
 async function saveSchedOverride() {
   const savedForTomorrow = isTomorrow(activeDate);
   await dbSet('schedule_override_'+activeDate, _overrideData);
-  _overrideOpen = false;
-  document.getElementById('schedOverrideEdit').style.display='none';
-  document.getElementById('schedOverrideBtn').textContent = savedForTomorrow ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
+  _schedEditMode = false;
+  _overrideData = null;
   toast(savedForTomorrow ? '✅ Ertangi jadval saqlandi' : '✅ Bugungi jadval saqlandi');
   renderBugun();
 }
 async function clearSchedOverride() {
-  const clearedForTomorrow = isTomorrow(activeDate);
   await dbSet('schedule_override_'+activeDate, null);
-  _overrideOpen = false;
-  document.getElementById('schedOverrideEdit').style.display='none';
-  document.getElementById('schedOverrideBtn').textContent = clearedForTomorrow ? '✏ Ertani tahrirlash' : '✏ Bugunni tahrirlash';
+  _schedEditMode = false;
+  _overrideData = null;
   toast('✅ Asosiy jadvalga qaytildi');
   renderBugun();
 }
